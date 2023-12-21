@@ -89,19 +89,19 @@ const verifyOTP = async (req, res) => {
                 // send message to email 
                 await successRegistrationEmail({
                     email: username, 
-                    subject: "Password Change Successful", 
-                    message: "Your password has been successfully changed."
+                    subject: "Password Updated Successfully", 
+                    message: "Congratulations! Your password has been updated successfully."
                 })
 
                 return res.status(200).json({
                     status: "success",
-                    message: "Password change successfully.",
+                    message: "Password updated successfully.",
                 });
 
             } else {
                 return res.status(400).json({
                     status: "error",
-                    message: "OTP does not match. Please enter a valid OTP."
+                    message: "Invalid OTP. Please try again."
                 });
             }
         }

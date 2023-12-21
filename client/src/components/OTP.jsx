@@ -64,12 +64,10 @@ function OTP() {
       }; 
       
       const response = await api.post('/otp/verify', values);
-      console.log(response.data);
       if(response.data.status === 'success'){
-        setSuccessMessage(response.data.message)
-        // setTimeout(() => {
-        //   setRegistrationStatus(true)
-        // }, 0)
+          setSuccessMessage(response.data.message)
+
+        // setSuccessMessage(response.data.message)
   
         localStorage.setItem('token', response.data.token); 
         localStorage.setItem('role', response.data.role);
@@ -78,7 +76,9 @@ function OTP() {
         const userRole = localStorage.getItem('role');
         const dashboardURL = userRole === 'admin' ? '/dashboard' : '/Home';
 
-        navigate(dashboardURL);
+        setTimeout(() => {
+          navigate(dashboardURL);
+        }, 2000)
       } else {
         setLoader(false)
         // alert(response.data.message);

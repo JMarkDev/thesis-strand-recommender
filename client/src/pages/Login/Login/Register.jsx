@@ -5,9 +5,7 @@ import logo from '../../../assets/images/FLL.png'
 import Loading from "../../../components/loading/otpLoader/otpLoader";
 
 export default function Register() {
-  const [registrationStatus, setRegistrationStatus] = useState(null);
   const [loader, setLoader] = useState(false);
-  // const [otpOpen, setOtpOpen] = useState(false); 
   const navigate = useNavigate();
 
   const [values, setValues] = useState({
@@ -80,7 +78,6 @@ export default function Register() {
       } else {
         // Handle unexpected errors
         console.error("Unexpected error:", error);
-        // Optionally, provide a generic error message to the user
       }
     }
   };
@@ -89,22 +86,6 @@ export default function Register() {
   return (
     <>
     <div className="relative">
-      {/* {registrationStatus === "success" && (
-        <div
-          className="flex w-1/2 mx-auto rounded-lg bg-green-100 px-6 py-5 text-base text-green-500 justify-center items-center"
-          role="alert"
-        >
-          Registration successful! Redirecting to the login page...
-        </div>
-      )}
-      {registrationStatus === "error" && (
-        <div
-          className="mb-4 rounded-lg bg-error-100 text-red-600 px-6 py-5 text-base text-error-700 text-center"
-          role="alert"
-        >
-          Registration failed. Please try again.
-        </div>
-      )} */}
       <div
         className="flex flex-col items-center sm:justify-center sm:pt-0"/>
         <div
@@ -120,13 +101,6 @@ export default function Register() {
         <Loading />
       </div>
     }
-        {/* {
-          otpOpen ? (
-            <OTP 
-              username={values.username} 
-              role={values.role}
-            />
-          ) : ( */}
           
             <div className="w-[350px] sm:mx-auto sm:w-full sm:max-w-md px-4 py-4 mt-6 overflow-hidden bg-gradient-to-b from-transparent to-cyan-300 shadow-md sm:rounded-lg">
             <div className="p-5 m-auto flex justify-center items-center">

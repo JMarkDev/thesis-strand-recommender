@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
-import sendEmail from '../assets/images/send-email.jpg'
-import api from '../api/api';
-import Loading from "../components/loading/otpLoader/otpLoader";
-function OTP() {
+import sendEmail from '../../assets/images/send-email.jpg'
+import api from '../../api/api';
+import Loading from "../../components/loading/otpLoader/otpLoader";
+function ChangePasswordOTP() {
   const [countDown, setCountDown] = useState(0);
   const [successMessage, setSuccessMessage] = useState('');
   const [otpError, setOtpError] = useState('');
@@ -14,7 +14,6 @@ function OTP() {
   const navigate = useNavigate();
   // Access the data
   const username = state ? state.username : '';
-  const role = state ? state.role : '';
 
   const [otpDigits, setOtpDigits] = useState(['', '', '', '']); // Initialize state for OTP digits
   const inputRefs = [useRef(), useRef(), useRef(), useRef()];
@@ -58,36 +57,32 @@ function OTP() {
 
     try{
       const values = {
-        email: username,
-        role: role,
+        username: username,
         otp: otpDigits.join(''), // Join the OTP digits into a single string
       }; 
       
-      const response = await api.post('/otp/verify', values);
+      const response = await api.post('/otp/change-password-otp', values);
+      console.log(response.data);
       if(response.data.status === 'success'){
-          setSuccessMessage(response.data.message)
-
-        // setSuccessMessage(response.data.message)
-  
-        localStorage.setItem('token', response.data.token); 
-        localStorage.setItem('role', response.data.role);
-        localStorage.setItem('userId', response.data.userId);
-
-        const userRole = localStorage.getItem('role');
-        const dashboardURL = userRole === 'admin' ? '/dashboard' : '/Home';
+        setLoader(false);
+        setSuccessMessage(response.data.message)
 
         setTimeout(() => {
-          navigate(dashboardURL);
+          navigate('/confirm-password', { 
+            state: { 
+              username: username,
+              otp: otpDigits.join('')
+            } 
+          });
         }, 2000)
       } else {
         setLoader(false)
-        // alert(response.data.message);
         setOtpError(response.data.message);
       }
     }
     catch(err){
+      setOtpError(err.response.data.message);
       setLoader(false);
-      console.log(err);
     }
   }
 
@@ -157,18 +152,19 @@ function OTP() {
       <div className="absolute flex items-center justify-center h-screen">
         <Loading />
       </div>
-    }
-      <div className="w-[350px] bg-white p-6 rounded-lg shadow-md">
+      }
+      <div className="w-[350px] sm:mx-auto sm:w-full sm:max-w-md px-4 py-4 mt-6 overflow-hidden bg-white p-4 rounded-lg shadow-md">
         <div className='flex'>
-        <Link to="/register" className="flex items-center gap-2 mb-4">
+        <Link to="/login" className="flex items-center gap-2 mb-4">
           <MdOutlineKeyboardBackspace className='text-2xl'/>
         </Link>
-        <h1 className="ml-5 text-2xl font-semibold mb-4">Account Verification</h1>
+        <h1 className="ml-5 text-2xl font-semibold mb-4">Password Reset</h1>
         </div>
-
-        <img src={sendEmail} alt="Send Email" className="w-[150px] h-100 mb-4" />
-        <h4 className='text-xl font-semibold mb-2'>
-          Verify email address
+        <div className="p-5 m-auto flex justify-center items-center">
+            <img src={sendEmail} alt="Send Email" className="w-[150px] h-100 mb-4 " />
+        </div>
+        <h4 className='text-lg font-semibold mb-2'>
+        Check your email for the password reset OTP.
         </h4>
         <p className="text-gray-600">Please enter the 4 digit OTP sent to</p>
         <p className='text-gray-600 mb-6'>{username}</p>
@@ -202,7 +198,7 @@ function OTP() {
             type='submit'
             disabled={submitDisabled}
             >
-            Verify
+            Confirm
           </button>
         </form>
         <p className="text-center text-gray-500 text-sm mt-4">
@@ -222,4 +218,4 @@ function OTP() {
   );
 }
 
-export default OTP;
+export default ChangePasswordOTP;

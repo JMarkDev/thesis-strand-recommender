@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-pascal-case */
 import React, { useState, useEffect } from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// change to HashRouter if deployment 
 
 import Layout from './components/Layout';
 import LayoutStudent from './components/LayoutStudent';
@@ -29,7 +30,10 @@ import SingleStrand from './pages/Students/Students/SingleStrand';
 import CarouselComponent from './pages/Students/Students/CarouselComponent';
 import Profile from './pages/Students/Students/Profile';
 import Grades from './pages/Admin/Grades';
-import OTP from './components/OTP';
+import OTP from './pages/Authentication/RegistrationOTP';
+import ChangePassword from './pages/Authentication/ChangePassword';
+import ChangePasswordOTP from './pages/Authentication/ChangePasswordOTP';
+import ConfirmPassword from './pages/Authentication/ConfirmPassword';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -48,6 +52,10 @@ function App() {
         <Route path="/*" element={<PageNotFound />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify" element={<OTP />} />
+        <Route path='/change-password' element={ <ChangePassword /> }/>
+        <Route path='/change-password-otp' element={ <ChangePasswordOTP />}/>
+        <Route path='/confirm-password' element={ <ConfirmPassword /> }/>
+
         <Route path="/log-in" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
 
         {/* Routes for admin */}

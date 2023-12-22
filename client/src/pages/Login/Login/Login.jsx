@@ -13,6 +13,7 @@ function Login() {
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate(); 
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -25,8 +26,6 @@ function Login() {
     try {
       const response = await api.post('/login', values);
   
-      console.log(response.data);
-  
       if (response.data.status === 'success') {
         localStorage.setItem('token', response.data.token); 
         localStorage.setItem('role', response.data.role);
@@ -34,8 +33,11 @@ function Login() {
   
         const userRole = localStorage.getItem('role');
         const dashboardURL = userRole === 'admin' ? '/dashboard' : '/Home';
-        navigate(dashboardURL);
-        alert('Login successfully.'); 
+        setTimeout(() => {
+          navigate(dashboardURL)
+        }, 2000);
+          
+        setSuccessMessage(response.data.message);
       } else {
         setErrorMessage(response.data.message);
       }
@@ -57,6 +59,29 @@ function Login() {
   
   
   return (
+    <>
+    {
+      successMessage &&
+      <div
+        className="absolute flex w-full mx-auto  bg-green-100 px-6 py-5 text-base text-green-500 justify-center items-center"
+        role="alert"
+      >
+        <span className="flex-1 mr-3">{successMessage}</span>
+        <svg
+          className="w-5 h-5 fill-current text-green-500"
+          role="button"
+          viewBox="0 0 20 20"
+          onClick={() => setSuccessMessage(false)}
+        >
+          <title>Close</title>
+          <path
+            fillRule="evenodd"
+            d="M10.293 8l3.646-3.646a.5.5 0 11.708.708L11.707 8l3.647 3.646a.5.5 0 01-.708.708L10 8.707l-3.646 3.647a.5.5 0 01-.708-.708L9.293 8 5.646 4.354a.5.5 0 01.708-.708L10 7.293l3.646-3.647a.5.5 0 0 1 .708.708L10.707 8z"
+            clipRule="evenodd"
+          ></path>
+        </svg>
+      </div>
+  }
     <div
       className="flex flex-col items-center h-screen sm:justify-center sm:pt-0"
       style={{
@@ -68,12 +93,6 @@ function Login() {
       <h2 className="text-center mb-5 text-3xl font-bold leading-9 tracking-tight text-gray-900">
               Discover the right Senior High School Strand suites for you!
             </h2>
-
-      {/* <div className="p-5 mt-5 flex flex-col items-center">
-        <img src={logo} className="w-[180px] h-[30px]" alt="logo" />
-      </div> */}
-
-      {/* <div className="w-[450px] h-[450px] sm:mx-auto sm:w-full sm:max-w-md"> */}
 
         <div className="w-[350px] sm:mx-auto sm:w-full sm:max-w-md px-4 py-4 mt-6 overflow-hidden bg-gradient-to-r from-cyan-300 to-transparent p-4 rounded-lg shadow-md">
         <div className="p-5 m-auto flex justify-center items-center">
@@ -109,7 +128,7 @@ function Login() {
                   Password
                 </label>
                 <div className="text-sm">
-                  <Link to="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                  <Link to="/change-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
                     Forgot password?
                   </Link>
                 </div>
@@ -150,8 +169,8 @@ function Login() {
             </Link>
           </p>
         </div>
-      {/* </div> */}
     </div>
+    </>
   );
 }
 

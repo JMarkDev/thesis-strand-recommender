@@ -10,7 +10,7 @@ const postOtp = async (username) => {
       // Your existing code for generating and sending OTP
       const createdOTP = await sendOTP({
         email: username,
-        subject: "Registration Verification",
+        subject: "Strand Recommender Verification Code",
         message: "Verify your email with the code below.",
         duration: 5,
       });
@@ -60,7 +60,7 @@ const verifyOtp = async (req, res) => {
                     // Send success registration email
                     await successRegistrationEmail({
                         email: email, 
-                        subject: "Registration Successful", 
+                        subject: "Strand Recommender Registration Successful", 
                         message: "Thank you for registering. Your account has been successfully created."
                     })
 
@@ -112,7 +112,7 @@ const resendOTP = async (req, res) => {
 
         const createdOTP = await sendOTP({
             email,
-            subject: "Registration Verification",
+            subject: "Strand Recommender Verification Code",
             message: "Verify your email with the code below.",
             duration: 5,
         });

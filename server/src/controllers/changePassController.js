@@ -6,8 +6,16 @@ const { sendOTP } = require('../utils/sendOTP')
 const otpModel = require('../models/otpModel');
 const { successRegistrationEmail } = require('../utils/successRegistrationEmail')
 
-const handleChangePassword = async (req, res) => {
+const changePasswordOTP = async (req, res) => {
     const { username} = req.body;
+
+    if(!username) {
+        return res.status(400).json({
+            status: "error",
+            message: "Username is required"
+        })
+    }
+
     try {
         const usernameExists = await userModel.checkIfUsernameExists(username);
         const isUserVerified = await userModel.checkVerifiedUserEmail(username);
@@ -30,12 +38,13 @@ const handleChangePassword = async (req, res) => {
     }
 }
 
+// send message to email
 const sendOTPVerification = async (username) => {
     try{
         const createdOTP = await sendOTP({
             email: username,
-            subject: "Password Reset",
-            message: "Verify your email with the code below.",
+            subject: "Reset Strand Recommender password",
+            message: "To reset your password, please verify your email with the code below:",
             duration: 5,
         });
         return createdOTP;
@@ -45,29 +54,66 @@ const sendOTPVerification = async (username) => {
     }
 }
 
-const verifyOTP = async (req, res) => {
+const confirmOTP = async (req, res) => {
     try {
-        const { username, password,  otp } = req.body;
+    const { username, otp } = req.body;
+
+    if(!otp) {
+        return res.status(400).json({
+            status: "error",
+            message: "OTP is required"
+        })
+    }
+    // find otp in database
+    const matchedOTPRecord = await otpModel.otpFindOne(username);
+    
+    const { result } = matchedOTPRecord;
+    const { expiresAt } = result[0];  // Assuming result is an array 
+
+    // Check if OTP is expired
+    if (expiresAt < Date.now()) {
+        return res.status(400).json({
+            status: "error", 
+            message: 'Code has expired. Request for a new one' 
+        });
+    }
+
+    // check if OTP is correct
+    const verifyOtpResult = await otpModel.verifyOtp(username);
+    if(verifyOtpResult) {
+        const matchOtp = await bcrypt.compare(otp, verifyOtpResult[0].otp);
+
+        if(matchOtp) {
+            return res.status(200).json({
+                status: "success",
+                message: "OTP verified successfully.",
+            });
+        } else {
+            return res.status(400).json({
+                status: "error",
+                message: "Invalid OTP. Please try again."
+            });
+        }
+    }
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ Error: "Confirm OTP error in server" });
+    }
+}
+
+const confirmPassword = async (req, res) => {
+    try {
+        const { username, password, confirmPassword, otp } = req.body;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         const createdAt = new Date();
         const formattedDate = date.format(createdAt, 'YY/MM/DD HH:mm:ss');
         
-        if(!(username && otp)) throw Error("Username and OTP are required!");
-
         // Ensure OTP record exists
         const matchedOTPRecord = await otpModel.otpFindOne(username);
 
         if (!matchedOTPRecord) {
             return res.status(400).json({ message: 'OTP record not found' });
-        }
-
-        const { result } = matchedOTPRecord;
-        const { expiresAt } = result[0];  // Assuming result is an array 
-
-        // Check if OTP is expired
-        if (expiresAt < Date.now()) {
-            await otpModel.deleteOne(username);
-            throw new Error("Code has expired. Request for a new one");
         }
 
         // Check if OTP is correct
@@ -112,6 +158,7 @@ const verifyOTP = async (req, res) => {
 }
 
 module.exports = { 
-    handleChangePassword,
-    verifyOTP
+    changePasswordOTP,
+    confirmOTP,
+    confirmPassword,
 };

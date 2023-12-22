@@ -23,7 +23,6 @@ const loginValidationRules = () => {
   ];
 };
 
-
 const registerValidationRules = () => {
   return [
     body('name').notEmpty().withMessage('Name is required'),
@@ -69,6 +68,35 @@ const registerValidationRules = () => {
   ];
 };
 
+const passwordValidationRules = () => {
+  return [
+    body('password')
+      .custom((value, { req }) => {
+        if (!value) {
+          throw new Error('Password is required');
+        }
+
+        if (value.length < 8) {
+          throw new Error('Password must be at least 8 characters');
+        }
+
+        return true;
+      }),
+    body('confirmPassword')
+      .custom((value, { req }) => {
+        if (!value) {
+          throw new Error('Confirm password is required');
+        }
+
+        if (value !== req.body.password) {
+          throw new Error('Passwords do not match');
+        }
+
+        return true;
+      }),
+  ];
+}
+
 const validateForm = (req, res, next) => {
   const errors = validationResult(req);
 
@@ -83,4 +111,5 @@ module.exports = {
   loginValidationRules,
   validateForm,
   registerValidationRules,
+  passwordValidationRules
 };

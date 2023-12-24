@@ -189,13 +189,6 @@ router.get('/monthly/:year', async (req, res) => {
         return `SUM(CASE WHEN s.name = '${strandName}' THEN 1 ELSE 0 END) AS ${strandName}`;
       });
 
-      // Construct the dynamic SQL query to generate data for the selected year, including all months
-      {/*const dynamicQuery = `
-      SELECT
-          monthName AS month,
-          ${caseStatements.join(', ')},
-          COALESCE(COUNT(r.recommended), 0) AS amt
-    */}    
       const dynamicQuery = `
         SELECT
             monthName AS month,

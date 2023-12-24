@@ -72,11 +72,83 @@ const strandNameExists = async (name) => {
     }
 }
 
+const getTotalStrandRecommended = async () => {
+    try {
+        const result = await executeQuery(`SELECT s.name AS strand, COUNT(r.recommended) AS recommeded_count
+            FROM strand AS s
+            LEFT JOIN student AS r ON s.name = r.recommended
+            GROUP BY s.name
+        `)
+        return result;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+const getMonthlyData = async (selectedYear) => {
+    try {
+        //Step 1 query available strand names 
+        const strandQuery = 'SELECT name from strand';
+
+        const strandResults = await executeQuery(strandQuery);
+
+        // Dynamically generate CASE statements base on the strand names
+        const caseStatements = strandResults.map((row) => {
+            const strandName = row.name;
+            return `SUM(CASE WHEN s.name = '${strandName}' THEN 1 ELSE 0 END) AS ${strandName}`;
+        });
+
+        // Step 3: Construct the dynamic query
+        const dynamicQuery = `
+                SELECT
+                    monthName AS month,
+                    ${caseStatements.join(', ')}
+                FROM (
+                SELECT 1 AS monthIndex, 
+                'Jan ${selectedYear}' AS monthName
+                UNION SELECT 2, 'Feb ${selectedYear}'
+                UNION SELECT 3, 'Mar ${selectedYear}'
+                UNION SELECT 4, 'Apr ${selectedYear}'
+                UNION SELECT 5, 'May ${selectedYear}'
+                UNION SELECT 6, 'Jun ${selectedYear}'
+                UNION SELECT 7, 'Jul ${selectedYear}'
+                UNION SELECT 8, 'Aug ${selectedYear}'
+                UNION SELECT 9, 'Sep ${selectedYear}'
+                UNION SELECT 10, 'Oct ${selectedYear}'
+                UNION SELECT 11, 'Nov ${selectedYear}'
+                UNION SELECT 12, 'Dec ${selectedYear}'
+                ) AS months
+                LEFT JOIN student AS r ON months.monthName = DATE_FORMAT(r.createdAt, '%b %Y')
+                LEFT JOIN strand AS s ON r.recommended = s.name
+                GROUP BY month
+                ORDER BY months.monthIndex;
+            `;
+
+        // Step 4: Execute the dynamic query 
+        const results = await executeQuery(dynamicQuery);
+
+        // Step 5: Clean and format the results 
+        const cleanedResults = results.map((result) => ({
+            ...result,
+            month: result.month.split(' ')[0]   // // Get only the first part of the month string
+        }));
+
+        return cleanedResults
+        
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
     getAllStrand,
     getStrandById,
     addStrand,
     updateStrand,
     deleteStrand,
-    strandNameExists
+    strandNameExists,
+    getTotalStrandRecommended,
+    getMonthlyData
 }

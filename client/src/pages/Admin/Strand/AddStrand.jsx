@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { TbArrowBackUp } from 'react-icons/tb';
 import axios from 'axios';
+import api from '../../../api/api';
 
 function AddStrand() {
   const navigate = useNavigate();
@@ -80,8 +81,9 @@ function AddStrand() {
     data.append('recommendationConditions', JSON.stringify(recommendationConditions));
 
     try {
-      const response = await axios.post('http://backend.api.senior-high-school-strand-recommender.pro/strand/add', data);
-      alert(response.data.data);
+      const response = await api.post('/strand/add', data);
+      console.log(response.data)
+      alert(response.data.message);
       navigate('/strand')
     } catch (error) {
       alert(error.response.data.Error)

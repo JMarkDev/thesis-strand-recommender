@@ -4,6 +4,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import PieComponent from './PieComponent';
 import axios from 'axios';
 import YearDropdown from '../../components/YearDropdown'
+import api from '../../api/api';
+
 const Dashboard = () => {
     const COLORS = [
         '#e88245', 
@@ -31,7 +33,7 @@ const Dashboard = () => {
 
     const totalData = async () => {
         try{
-            const response = await axios.get('http://backend.api.senior-high-school-strand-recommender.pro/strand/total');
+            const response = await api.get('/strand/total');
             setStrand(response.data);
         } catch(err) {
             console.log(err);
@@ -60,7 +62,7 @@ const Dashboard = () => {
 
     const fetchDataStatatistics = async (year) => {
         try {
-            const response = await axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/strand/monthly/${year}`);
+            const response = await api.get(`/strand/monthly/${year}`);
             setData(response.data);
             setSelectedYear(year);
         } catch (err) {
@@ -91,7 +93,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className='ml-5'>
                                     <h2 className='text-[#030712] text-[16px] leading-[17px] px-[10px] font-bold'>{strand.strand}</h2>
-                                    <h1 className='text-[20px] leading-[24px] text-lg font-bold text-[#5a5c69] px-[10px] mt-[5px] dark:text-white'>{strand.count}</h1>
+                                    <h1 className='text-[20px] leading-[24px] text-lg font-bold text-[#5a5c69] px-[10px] mt-[5px] dark:text-white'>{strand.recommendedCount}</h1>
                                 </div>
                             </div>
                         </div>

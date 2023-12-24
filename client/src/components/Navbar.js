@@ -4,6 +4,7 @@ import { FaUser } from "react-icons/fa"
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import axios from "axios";
 import userImg from ".././assets/images/user.png";
+import api from "../api/api";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -49,22 +50,21 @@ const Navbar = () => {
     navigate("/");
   };
 
-  const getName = async () => {
-    const name = localStorage.getItem('userId');
-    await axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/students/${name}`)
-      .then((res) => {
-        const name = res.data[0].name;
-        setName(name);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   useEffect(() => {
-    getName();
-  }, []);
+    const getName = async () => {
+      const userId = localStorage.getItem('userId');
+      try {
+        const response = await api.get(`/admin/${userId}`)
+        const name = response.data[0].name
+        setName(name)
+      } catch (error) {
+        console.log(error)
+      }
+    }
 
+    getName()
+  }, [])
+ 
   return (
       <nav className=' bg-[#14b8a6] dark:bg-[#042f2e] mx-4 px-3 py-2 rounded-xl  mt-3 border-x-4 border-y-2 border-black dark:border-white'>
         <div className='container flex justify-between items-center mx-auto pt-3 mb-2'>

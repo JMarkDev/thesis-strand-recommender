@@ -2,20 +2,24 @@ import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import StrandTable from './Strand/StrandTable'
+import api from '../../api/api'
 
 function Strand() {
   const [strand, setStrand] = useState([])
 
   useEffect(() => {
-    axios.get('http://backend.api.senior-high-school-strand-recommender.pro/strand/fetch')
+    const getStrandData = async () => {
+      try {
+        const response = await api.get('/strand');
+        setStrand(response.data)
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
-    .then((res) => {
-      setStrand(res.data)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+    getStrandData()
   }, [])
+
 
   return (
     <div>

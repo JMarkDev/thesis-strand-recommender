@@ -55,16 +55,6 @@ const deleteStudent = async (id) => {
     }
 };
 
-// const getRecommended = async (title) => {
-//     try {
-//         const result = await executeQuery(' SELECT strand FROM course WHERE title = ?', [title]);
-//         return result;
-//     } catch (error) {
-//         console.error(error);
-//         throw error;
-//     }
-// }
-
 const updateRecommended = async (id, recommended) => {
     try {
         const result = await executeQuery("UPDATE student SET recommended =? WHERE id =?", [recommended, id]);
@@ -77,13 +67,23 @@ const updateRecommended = async (id, recommended) => {
 
 const searchStudent = async (name) => {
     try {
-        const result = await executeQuery("SELECT * FROM student WHERE name LIKE ?", [`%${name}%`]);
+        const result = await executeQuery("SELECT * FROM student WHERE LOWER(name) LIKE LOWER(?)", [`${name}%`]);
         return { status: "success", data: result };
     } catch (error) {
         console.error(error);
         throw error;
     }
 };
+
+const getAllRecommended = async () => {
+    try {
+        const result = await executeQuery("SELECT * FROM student WHERE recommended IS NOT NULL");
+        return result;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 
 const filterRecommended = async (recommended) => {
     try {
@@ -104,5 +104,6 @@ module.exports = {
     searchStudent,
     // getRecommended,
     updateRecommended,
+    getAllRecommended,
     filterRecommended
 };

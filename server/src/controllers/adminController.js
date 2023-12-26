@@ -60,22 +60,14 @@ const deleteAdmin = async (req, res) => {
 
 const searchAdmin = async (req, res) => {
     const { name } = req.params;
-
     try {
-        const admin = await adminModel.searchAdmin(name);
-        if (admin.status ==='success') {
-            if(admin.data.length === 0) {
-                return res.status(404).json({ status: "error", message: "Admin not found" });
-            }
-            return res.json({ status: "success", message: "Admin found", data: admin.data });
-        } else {
-            return res.status(400).json({ status: "error", message: admin.message });
-        }
+        const searchResult = await adminModel.searchAdminQuery(name);
+        return res.json(searchResult);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ status: "error", message: error.message });
     }
-}
+}   
 
 module.exports = {
     getAllAdmin,

@@ -53,9 +53,10 @@ const deleteAdmin = async (id) => {
     }
 }
 
-const searchAdmin = async (name) => {
+const searchAdminQuery = async (name) => {
     try {
-        const result = await executeQuery("SELECT * FROM admin WHERE name LIKE?", [`%${name}%`]);
+        const result = await executeQuery("SELECT * FROM admin WHERE LOWER(name) LIKE LOWER(?)", [`${name}%`]);
+        console.log('test')
         return { status: "success", data: result };
     } catch (error) {
         console.error(error);
@@ -68,5 +69,5 @@ module.exports = {
     getAdminById,
     updateAdmin,
     deleteAdmin,
-    searchAdmin
+    searchAdminQuery
 };

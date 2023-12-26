@@ -10,6 +10,7 @@ router.delete('/delete/:id', studentController.deleteStudent);
 router.get('/search/:name', studentController.searchStudent);
 // router.get('/recommended', studentController.getRecommended);
 router.put('/update-recommended/:id', studentController.updateRecommended);
+router.get('/all/recommended', studentController.getAllRecommendedStrand);
 router.get('/filter-recommended/:recommended', studentController.filterRecommended);
 
 module.exports = router;

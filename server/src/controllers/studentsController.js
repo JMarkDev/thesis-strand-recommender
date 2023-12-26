@@ -65,14 +65,7 @@ const searchStudent = async (req, res) => {
     const { name } = req.params;
     try {
         const searchResult = await studentModel.searchStudent(name);
-        if (searchResult.status === 'success') {
-            if(searchResult.data.length === 0) {
-                return res.status(404).json({ status: "error", message: "Student not found" });
-            }
-            return res.json({ status: "success", message: "Student found", data: searchResult.data });
-        } else {
-            return res.status(400).json({ status: "error", message: searchResult.message });
-        }
+        return res.json(searchResult);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ status: "error", message: error.message });
@@ -103,12 +96,21 @@ const updateRecommended = async (req, res) => {
     }
 }
 
+const getAllRecommendedStrand = async (req, res) => {
+    try {
+        const recommendedResult = await studentModel.getAllRecommended();
+        res.json(recommendedResult);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: "error", message: err.message });
+    }
+}
+
 const filterRecommended = async (req, res) => {
     const { recommended } = req.params;
-
     try{
         const filterResult = await studentModel.filterRecommended(recommended);
-        return res.status(200).json({ status: "success", message: "Student filtered successfully", filterResult });
+        return res.status(200).json(filterResult);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ status: "error", message: error.message });
@@ -123,5 +125,6 @@ module.exports = {
     searchStudent,
     // getRecommended,
     updateRecommended,
-    filterRecommended
+    getAllRecommendedStrand,
+    filterRecommended,
 };

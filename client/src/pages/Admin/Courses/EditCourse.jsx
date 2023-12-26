@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { TbArrowBackUp } from 'react-icons/tb';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import api from '../../../api/api';
 
 function EditCourse() {
   const [title, setTitle] = useState('');
@@ -15,8 +16,7 @@ function EditCourse() {
   const { id } = useParams();
 
   useEffect(() => {
-    axios
-      .get(`http://backend.api.senior-high-school-strand-recommender.pro/course/${id}`)
+    api.get(`/course/${id}`)
       .then((response) => {
         const data = response.data;
         setTitle(data[0].title);
@@ -46,8 +46,8 @@ function EditCourse() {
     }
   
     try {
-      const response = await axios.put(`http://backend.api.senior-high-school-strand-recommender.pro/course/edit/${id}`, formData);
-      alert(response.data.data); // Log the success response data
+      const response = await api.put(`/course/edit/${id}`, formData);
+      alert(response.data.message); // Log the success response data
       navigate('/courses');
     } catch (error) {
       console.error('Error updating course', error);
@@ -66,7 +66,7 @@ function EditCourse() {
 
   const strandOptions = async () => {
     try{
-      const response = await axios.get('http://backend.api.senior-high-school-strand-recommender.pro/strand/fetch');
+      const response = await api.get('/strand');
       const strands = response.data.map((strand) => strand.name);
       setStrands(strands);
     }

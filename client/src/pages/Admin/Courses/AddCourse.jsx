@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { TbArrowBackUp } from 'react-icons/tb';
 import axios from 'axios';
+import api from '../../../api/api';
 
 function AddCourse() {
   const [strands, setStrands] = useState([]);
@@ -36,8 +37,8 @@ function AddCourse() {
     data.append('strand', strand);
 
     try {
-      const response = await axios.post('http://backend.api.senior-high-school-strand-recommender.pro/course/upload', data);
-      alert(response.data.data);
+      const response = await api.post('/course/add', data);
+      alert(response.data.message);
       navigate('/courses')
     } catch (error) {
       console.log(error);
@@ -46,7 +47,7 @@ function AddCourse() {
 
   const strandOptions = async () => {
     try{
-      const response = await axios.get('http://backend.api.senior-high-school-strand-recommender.pro/strand/fetch');
+      const response = await api.get('/strand');
       const strands = response.data.map((strand) => strand.name);
       setStrands(strands);
     }

@@ -6,6 +6,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { MdDelete } from "react-icons/md";
 import { LiaEdit } from "react-icons/lia";
+import api from "../../api/api";
 
 export function Admin() {
   const [userData, setUserData] = useState([]);
@@ -13,34 +14,38 @@ export function Admin() {
   const [suggestions, setSuggestions] = useState([]);
   const [deleteUserId, setDeleteUserId] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [name, setName]= useState('')
 
   useEffect(() => {
-    // Specify the role you want to fetch (in this case, "student")
-    const roleToFetch = "admin";
-  
-    axios
-      .get(`http://backend.api.senior-high-school-strand-recommender.pro/students/fetch?role=${roleToFetch}`)
-      .then((response) => {
+    const getAdmin = async () => {
+      try {
+        const response = await api.get("/admin");
         setUserData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching student data:", error);
-      });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getAdmin();
   }, []);
   
 
   useEffect(() => {
-    if (searchQuery === "") {
-      setSuggestions([]);
-      return;
+    const handleSearch = async () => {
+      try {
+        if (name !== "") {
+          const response = await api.get(`/admin/search/${name}`)
+          setUserData(response.data.data)
+        } else {
+          // If no search query, fetch all data
+          const response = await api.get('/admin');
+          setUserData(response.data);
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
-    // Filter user data based on the search query
-    const filteredSuggestions = userData.filter((user) =>
-      user.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-    );
-
-    setSuggestions(filteredSuggestions);
-  }, [searchQuery, userData]);
+    handleSearch()
+  }, [name])
 
   const openDeleteDialog = (id) => {
     setDeleteUserId(id);
@@ -54,7 +59,7 @@ export function Admin() {
 
   const handleDeleteUser = async (id) => {
     try{
-      await axios.delete(`http://backend.api.senior-high-school-strand-recommender.pro/students/delete/${id}`);  
+      await api.delete(`/student/delete/${id}`);  
       setUserData((userData) => userData.filter((user) => user.id !== id));
     }
     catch(error){
@@ -72,8 +77,8 @@ export function Admin() {
                 type="text"
                 className="block w-40 md:w-60 px-2 py-2 text-purple-700 bg-white border border-black rounded-full focus:border-purple-400 focus:ring-purple-300 dark:focus:ring-orange-500 focus:outline-none focus:ring focus:ring-opacity-40"
                 placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
             />
             <button className="px-2 py-2 text-white bg-purple-600 w-10 rounded-full ">
                 <svg
@@ -159,8 +164,7 @@ export function Admin() {
             </tr>
           </thead>
           <tbody className="divide-y divide-black dark:divide-white">
-            {suggestions.length === 0
-              ? userData.map(({ id, name, username, gender,role }) => (
+            { userData.map(({ id, name, username, gender,role }) => (
                   <tr key={id}>
                     <td className="p-4 md:table-cell">
                       <Typography
@@ -231,78 +235,7 @@ export function Admin() {
                     </td>
                   </tr>
                 ))
-              : suggestions.map(({ id, name,username, gender, role }) => (
-                  <tr key={id}>
-                    <td className="p-4 md:table-cell">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {id}
-                      </Typography>
-                    </td>
-                    <td className="p-4 md:table-cell">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {name}
-                      </Typography>
-                    </td>
-                      <td className="p-4 md:table-cell">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {username}
-                      </Typography>
-                    </td>
-                    <td className="p-4 md:table-cell">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {gender}
-                      </Typography>
-                    </td>
-                    <td className="p-4 md:table-cell">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {role}
-                      </Typography>
-                    </td>
-                    {/* Add more columns for other user properties */}
-                    <td className="p-4 md:table-cell">
-                      {/* Add delete action with trashcan icon */}
-                      <button
-                        className="text-red-600 hover:text-red-800"
-                        onClick={() => openDeleteDialog(id)}
-                      >
-                      <MdDelete className="h-6 w-6"/>
-                      </button>
-                       <button
-                        className="ml-5 text-red-600 hover:text-red-800"
-                        
-                      >
-                      <Link
-                      to={`/update/${id}`}
-                      className="text-decoration-none"
-                      >
-                      <LiaEdit className="h-6 w-6"/>
-                      {/* Edit */}
-                    </Link>
-                      
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+            }
           </tbody>
         </table>
       </Card>

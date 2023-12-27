@@ -27,6 +27,17 @@ const getStrandById = async (id) => {
         return result;
     } catch (error) {
         console.error(error);
+        throw error; 
+    }
+}
+
+const getStrandByName = async (name) => {
+    try {
+        const result = await executeQuery('SELECT * FROM strand WHERE name =?', [name]);
+        console.log(result);
+        return result;
+    } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -74,11 +85,12 @@ const strandNameExists = async (name) => {
 
 const getTotalStrandRecommended = async () => {
     try {
-        const result = await executeQuery(`SELECT s.name AS strand, COUNT(r.recommended) AS recommeded_count
-            FROM strand AS s
-            LEFT JOIN student AS r ON s.name = r.recommended
-            GROUP BY s.name
-        `)
+        const result = await executeQuery(`SELECT s.name AS strand, COUNT(r.recommended) AS recommendedCount
+        FROM strand AS s
+        LEFT JOIN student AS r ON s.name = r.recommended
+        GROUP BY s.name
+        ORDER BY s.id;
+         `)
         return result;
     } catch (error) {
         console.log(error);
@@ -145,6 +157,7 @@ const getMonthlyData = async (selectedYear) => {
 module.exports = {
     getAllStrand,
     getStrandById,
+    getStrandByName,
     addStrand,
     updateStrand,
     deleteStrand,

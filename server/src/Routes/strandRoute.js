@@ -6,6 +6,7 @@ const upload = multer({ dest: './uploads' });
 const strandController = require('../controllers/strandController');
 
 router
+    .get('/:name', strandController.getStrandByName)
     .get('/total', strandController.strandRecommendedTotal)
     .get('/', strandController.getAllStrands)
     .get('/:id', strandController.getStrandById)

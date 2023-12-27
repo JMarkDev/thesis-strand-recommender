@@ -23,6 +23,17 @@ const getStrandById = async (req, res) => {
     }
 }
 
+const getStrandByName = async (req, res) => {
+  try {
+    const { name } = req.params;
+    const strand = await strandModel.getStrandByName(name);
+    return res.json(strand);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Internal Server Error"});
+  }
+}
+
 const addStrand = async (req, res) => {
     const { name, description, recommendationConditions } = req.body;
     const createdAt = new Date();
@@ -145,20 +156,21 @@ const strandRecommendedTotal = async (req, res) => {
     
     result.forEach((row) => {
       const strand = row.strand;
-      const recommendedCount = row.recommeded_count;
-      strandCount[strand] = recommendedCount
-      totalRecommended += recommendedCount
-    })
+      const recommendedCount = row.recommendedCount; // Use the correct name here
+      strandCount[strand] = recommendedCount;
+      totalRecommended += recommendedCount;
+    });
+    
 
     // add total count for all strand columns
     strandCount['TOTAL'] = totalRecommended
     
     // Convert the object into an array of objects with the "TOTAL" count first
     const strandCountArray = Object.entries(strandCount).map(([strand , recommendedCount]) => ({ strand, recommendedCount }));
-    console.log(strandCountArray)
-    // strandCountArray.sort((a, b) => (a.strand === 'TOTAL' ? - 1 : b.strand === 'TOTAL' ? 1 : 0));
+    // put the total in first index
+    strandCountArray.sort((a, b) => (a.strand === 'TOTAL' ? - 1 : b.strand === 'TOTAL' ? 1 : 0));
+
     return res.status(200).json(strandCountArray)
-    // return res.status(200).json({strandCountArray, message: "total strand count"});
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: 'Internal server error' });
@@ -180,6 +192,7 @@ const getStrandMonthlyData = async (req, res) => {
 module.exports = {
     getAllStrands,
     getStrandById,
+    getStrandByName,
     addStrand,
     updateStrand,
     deleteStrand,

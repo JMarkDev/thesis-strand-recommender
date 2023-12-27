@@ -29,8 +29,6 @@ const Navbar = () => {
     '/strand': 'Strand'
   }
 
-  const pageTitle = pageTitles[location.pathname];
-
   const showProfile = (e) => {
     const isToggle = e.target.classList.contains('toggle-button');
     const isProfileIcon = e.target.classList.contains('profile-icon');

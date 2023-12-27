@@ -59,7 +59,7 @@ export function Admin() {
 
   const handleDeleteUser = async (id) => {
     try{
-      await api.delete(`/student/delete/${id}`);  
+      await api.delete(`/admin/delete/${id}`);  
       setUserData((userData) => userData.filter((user) => user.id !== id));
     }
     catch(error){

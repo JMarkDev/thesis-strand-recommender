@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import api from '../../../api/api';
 
 function Profile() {
     const [name, setName] = useState("");
@@ -15,7 +16,7 @@ function Profile() {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/students/${id}`);
+                const response = await api.get(`/students/${id}`);
                 setName(response.data[0].name)
                 setUsername(response.data[0].username)
                 setGender(response.data[0].gender)
@@ -49,7 +50,7 @@ function Profile() {
         }
 
         try {
-            const response = await axios.put(`http://backend.api.senior-high-school-strand-recommender.pro/students/update/${id}`, updateDetais);
+            const response = await api.put(`/students/update/${id}`, updateDetais);
             alert(response.data.message);
             setTimeout(() => {
                 setIsEditing(false);
@@ -195,6 +196,7 @@ function Profile() {
                                 className='mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ' 
                             />
                             </div>
+                            </form>
                             <div className='flex justify-end '>
                                     <button 
                                     onClick={() => setIsEditing(false)} 
@@ -209,7 +211,6 @@ function Profile() {
                                     Save
                                 </button>
                                 </div>
-                            </form>
                                 
                                
                             </div>

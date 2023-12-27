@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link} from 'react-router-dom';
-import axios from 'axios';
 import Footer from '../../../components/Footer';
 import { AccordionCustomIcon } from '../../../components/Accordion'
 import api from '../../../api/api';
@@ -15,7 +14,7 @@ const Home = () => {
   useEffect(() => {
     const courseData = async () => {
       try{
-        const response = await api.get('/course/fetch');
+        const response = await api.get('/course');
         setData(response.data.slice(0, 3));
       } catch (err) {
         console.log(err)
@@ -102,7 +101,7 @@ const Home = () => {
           data.map((course) => (
             <div key={course.id} className='bg-gradient-to-b from-green-300 to-transparent dark:bg-black rounded-lg shadow-md dark:shadow-lg'>
               <div className='m-5 card-body text-gray-700 dark:text-gray-100'>
-                <img src={`${api}/${course.image}`} alt={course.title} className='w-full h-[230px]' />
+                <img src={`${api.defaults.baseURL}/${course.image}`} alt={course.title} className='w-full h-[230px]' />
                 <h2 className='text-xl font-semibold py-3 dark:text-white'>{course.title}</h2>
                 <p className='text-base text-justify leading-6 mb-4 dark:text-white'>{course.description}</p>
               </div>

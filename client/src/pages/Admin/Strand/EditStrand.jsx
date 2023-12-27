@@ -84,7 +84,7 @@ function EditStrand() {
     if(e.target.type === "submit" ) {
       try {
         const response = await api.put(`/strand/update/${id}`, updatedFormData);
-        alert(response.data.data);
+        alert(response.data.message);
         navigate('/strand');
       } catch (error) {
         console.error('Error updating strand', error);

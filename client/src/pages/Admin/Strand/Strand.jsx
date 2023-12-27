@@ -1,8 +1,7 @@
-import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import StrandTable from './Strand/StrandTable'
-import api from '../../api/api'
+import StrandTable from './StrandTable'
+import api from '../../../api/api'
 
 function Strand() {
   const [strand, setStrand] = useState([])

@@ -31,16 +31,15 @@ const Dashboard = () => {
     const [selectedYear, setSelectedYear] = useState(2023);
     const [data, setData] = useState([]);
 
-    const totalData = async () => {
-        try{
-            const response = await api.get('/strand/total');
-            setStrand(response.data);
-        } catch(err) {
-            console.log(err);
-        }
-    }
-
     useEffect(() => {
+        const totalData = async () => {
+            try{
+                const response = await api.get('/strand/total');
+                setStrand(response.data);
+            } catch(err) {
+                console.log(err);
+            }
+        }
         totalData();
     }, [])
 

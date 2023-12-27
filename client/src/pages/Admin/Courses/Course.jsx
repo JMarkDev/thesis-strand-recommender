@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import CourseTable from '../../components/CourseTable'
-import axios from 'axios'
-import Dropdown from '../../components/Dropdown'
-import api from '../../api/api'
+import CourseTable from './CourseTable'
+import Dropdown from '../../../components/Dropdown'
+import api from '../../../api/api'
 
 function Course() {
   const [courses, setCourses] = useState([])

@@ -3,10 +3,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { BsChevronCompactLeft, BsChevronCompactRight } from 'react-icons/bs';
 import { RxDotFilled } from 'react-icons/rx';
 import SpinnerTemp from '../../../components/SpinnerTemp'
+import api from '../../../api/api';
 
 function CarouselComponent({ images }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [strandImages, setStrandImages] = useState([]);
+  const [strandImages, setStrandImages] = useState(images);
   const [isLoading, setIsLoading] = useState(true);
   const [autoSlideEnabled, setAutoSlideEnabled] = useState(true);
 
@@ -52,7 +53,6 @@ function CarouselComponent({ images }) {
     }
   }, [currentIndex, isLoading, autoSlideEnabled, nextSlide]);
 
-
   if (isLoading) {
     return <div>
     <SpinnerTemp />
@@ -63,7 +63,7 @@ function CarouselComponent({ images }) {
     <div className="mx-auto p-10 bg-white dark:bg-[#273242]">
       <div
         style={{
-          backgroundImage: `url(http://backend.api.senior-high-school-strand-recommender.pro/uploads/${strandImages[currentIndex]})`,
+          backgroundImage: `url(${api.defaults.baseURL}/uploads/${strandImages[currentIndex]})`,
         }}
         className="w-auto h-96 rounded-2xl bg-center bg-cover duration-500 mt-10"
       ></div>

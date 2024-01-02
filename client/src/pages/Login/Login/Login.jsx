@@ -32,9 +32,13 @@ function Login() {
   
         const userRole = localStorage.getItem('role');
         const dashboardURL = userRole === 'admin' ? '/dashboard' : '/Home';
+<<<<<<< HEAD
         
         navigate(dashboardURL)
           
+=======
+          navigate(dashboardURL)
+>>>>>>> 73119d82fa271a041ec7e3408f208ec3506a9fc4
       } else {
         setErrorMessage(response.data.message);
       }
@@ -56,7 +60,11 @@ function Login() {
   
   
   return (
+<<<<<<< HEAD
     <>
+=======
+    <> 
+>>>>>>> 73119d82fa271a041ec7e3408f208ec3506a9fc4
     <div
       className="flex flex-col items-center h-screen sm:justify-center sm:pt-0"
       style={{

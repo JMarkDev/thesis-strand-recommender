@@ -53,7 +53,8 @@ const PieComponent = ({ data }) => {
                             label={renderCustomizedLabel}
                             outerRadius={150}
                             fill="#8884d8"
-                            dataKey="count"
+                            //  recommededCount is the total data each strand
+                            dataKey="recommendedCount"
                         >
                             {pieData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={modifiedCOLORS[index % COLORS.length]} />

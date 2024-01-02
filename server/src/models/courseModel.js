@@ -29,7 +29,7 @@ const getCourseById = async (id) => {
         console.error(error);
         throw error;
     }
-}
+} 
 
 const addCourse = async (title, description, image, strand, formattedDate) => {
     try {

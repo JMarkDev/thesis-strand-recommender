@@ -7,6 +7,7 @@ import { Dialog, Transition } from "@headlessui/react";
 // import { GrView } from 'react-icons/gr';
 import { Fragment } from "react";
 import '../../../index.css'
+import api from '../../../api/api';
 
 
 function StrandTable({ strand }) {
@@ -37,7 +38,7 @@ function StrandTable({ strand }) {
 
   const handleDeleteStrand = async (id) => {
     try {
-      const response = await axios.delete(`http://backend.api.senior-high-school-strand-recommender.pro/strand/delete/${id}`);
+      const response = await api.delete(`/strand/delete/${id}`);
       console.log(response);
       // Update the course list without the deleted course
       const newStrandList = strandList.filter((strand) => strand.id !== id);
@@ -106,7 +107,7 @@ function StrandTable({ strand }) {
                           </div>
                           */}
                           <img
-                            src={`http://backend.api.senior-high-school-strand-recommender.pro/uploads/${strand.image.split(',')[0]}`}
+                            src={`${api.defaults.baseURL}/uploads/${strand.image.split(',')[0]}`}
                             alt=""
                             className="h-100 w-100 rounded-lg transition-transform transform scale-100 group-hover:scale-150"
                           />

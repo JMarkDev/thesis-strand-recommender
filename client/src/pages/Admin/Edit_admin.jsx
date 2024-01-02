@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios"
 import { TbArrowBackUp } from "react-icons/tb";
+import api from "../../api/api";
 
 function Edit_admin() {
     const [name, setName] = useState("");
@@ -14,7 +15,7 @@ function Edit_admin() {
     let {id} = useParams()
 
     useEffect(() => {
-          axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/students/${id}`)
+          api.get(`/admin/${id}`)
         .then((response) => {
             const data = response.data
             setName(data[0].name);
@@ -45,7 +46,7 @@ function Edit_admin() {
         }
 
         try{
-            await axios.put(`http://backend.api.senior-high-school-strand-recommender.pro/students/update/${id}`, updateDetais);
+            await api.put(`/admin/update/${id}`, updateDetais);
             navigate('/admin')
         }
         catch(error){

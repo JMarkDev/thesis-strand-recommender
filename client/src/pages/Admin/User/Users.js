@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, Typography } from "@material-tailwind/react";
-import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { MdDelete } from "react-icons/md";
-import Dropdown from '../../../src/components/Dropdown'
+import Dropdown from '../../../components/Dropdown'
+import api from "../../../api/api";
+
 export function Users() {
   const [userData, setUserData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,6 +17,7 @@ export function Users() {
   const [rankings, setRankings] = useState({});
   const [isWhyModalOpen, setIsWhyModalOpen] = useState(false);
   const [strandData, setStrandData] = useState([]);
+  const [name, setName] = useState('')
 
   const openWhyModal = () => {
     setIsWhyModalOpen(true);
@@ -25,33 +27,34 @@ export function Users() {
     setIsWhyModalOpen(false);
   };
 
-  useEffect(() => {
-    // Specify the role you want to fetch (in this case, "student")
-    const roleToFetch = "student";
-  
-    axios
-      .get(`http://backend.api.senior-high-school-strand-recommender.pro/students/fetch?role=${roleToFetch}`)
-      .then((response) => {
-        setUserData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching student data:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   // Specify the role you want to fetch (in this case, "student")
+  //   const getUserData = async () => {
+  //     try {
+  //       const response = await api.get('/students')
+  //       setUserData(response.data);
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  //   getUserData()
+  // }, []);
   
 
-  useEffect(() => {
-    if (searchQuery === "") {
-      setSuggestions([]);
-      return;
-    }
-    // Filter user data based on the search query
-    const filteredSuggestions = userData.filter((user) =>
-      user.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-    );
 
-    setSuggestions(filteredSuggestions);
-  }, [searchQuery, userData]);
+  // useEffect(() => {
+  //   if (searchQuery === "") {
+  //     setSuggestions([]);
+  //     return;
+  //   }
+  //   // Filter user data based on the search query
+  //   const filteredSuggestions = userData.filter((user) =>
+  //     user.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+  //   );
+
+  //   setSuggestions(filteredSuggestions);
+  // }, [searchQuery, userData]);
+  // console.log(suggestions)
 
   const openDeleteDialog = (id) => {
     setDeleteUserId(id);
@@ -65,7 +68,7 @@ export function Users() {
   useEffect(() => {
     const handleRanking = async (id) => {
       try {
-        const response = await axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/rank/${id}`);
+        const response = await api.get(`/ranking/${id}`);
         if (response.data && response.data.length > 0 && response.data[0].strandRanking) {
           const strandRankingArray = JSON.parse(response.data[0].strandRanking);
           setRankings((prevRankings) => ({
@@ -99,8 +102,9 @@ export function Users() {
 
   const handleDeleteUser = async (id) => {
     try{
-      await axios.delete(`http://backend.api.senior-high-school-strand-recommender.pro/students/delete/${id}`);  
+      await api.delete(`/students/delete/${id}`);  
       setUserData((userData) => userData.filter((user) => user.id !== id));
+      console.log(id)
     }
     catch(error){
       console.log(error);
@@ -108,33 +112,38 @@ export function Users() {
     closeDeleteDialog();
   };
 
-  useEffect(() => {
-    const handleFilterCards = async () => {
-        try {
-            const response = await axios.get('http://backend.api.senior-high-school-strand-recommender.pro/filter/fetch/all');
-            setFilterData(response.data);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-    handleFilterCards();
-}, [])
-
   const handleFilter = async (strand) => {
-    if(strand === 'Default'){
-      const response = await axios.get('http://backend.api.senior-high-school-strand-recommender.pro/filter/fetch/all');
-      setFilterData(response.data);
-    }
-    else{
+    try {
+      let response;
+      if(strand === 'Default'){
+        response = await api.get('/students/all/recommended');
+        setUserData(response.data)
+      } else {
+        response = await api.get(`/students/filter-recommended/${strand}`);
+        setUserData(response.data.data);
+      }  
+    } catch (error) {
+      console.log(error)
+    };
+  }  
+
+  useEffect(() => {
+    const handleSearch = async () => {
       try {
-        const response = await axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/filter/fetch/${strand}`);
-        setFilterData(response.data);
-      } catch (err) {
-          console.log(err);
+        if (name !== "") {
+          const response = await api.get(`/students/search/${name}`)
+          setUserData(response.data.data)
+        } else {
+          // If no search query, fetch all data
+          const response = await api.get('/students');
+          setUserData(response.data);
+        }
+      } catch (error) {
+        console.log(error)
       }
     }
-
-};
+    handleSearch()
+  }, [name])
 
   return (
     <div className="py-5 px-2 min-h-screen w-auto">
@@ -144,8 +153,8 @@ export function Users() {
             type="text"
             className="block w-40 md:w-60 px-2 py-2 text-purple-700 bg-white border rounded-full focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
             placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           <button className="px-2 py-2 text-white bg-purple-600 w-10 rounded-full ">
             <svg
@@ -248,8 +257,7 @@ export function Users() {
             </tr>
           </thead>
           <tbody className="divide-y divide-black dark:divide-white">
-          {suggestions.length === 0
-            ? filterData.map(({ id, name, username, gender, role, recommended }) => (
+          {  userData.map(({ id, name, username, gender, role, recommended }) => (
                 <tr key={id}>
                   <td className="p-4 md:table-cell">
                     <Typography variant="small" color="blue-gray" className="font-normal">
@@ -281,7 +289,7 @@ export function Users() {
                   </td>
                   <td className="p-4 md:table-cell" key={`${id}-strand`}>
                     
-                  <td className="text-left md:table-cell" key={`${id}-strand`}>
+                  <div className="text-left md:table-cell" key={`${id}-strand`}>
                 {/**
               {rankings[id] && rankings[id].map((data, index) => (
                     <div key={`${id}-strand-${index}`}>
@@ -338,7 +346,7 @@ export function Users() {
                     </button>
                   </div>
                 </div>
-                          </td>
+                          </div>
                             </td>
 
                   
@@ -362,91 +370,7 @@ export function Users() {
                   
                   </tr>
                 ))
-              : suggestions.map(({ id, name, username, gender, role, recommended }) => (
-                  <tr key={id}>
-                    <td className="p-4 md:table-cell">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {id}
-                      </Typography>
-                    </td>
-                    <td className="p-4 md:table-cell">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {name}
-                      </Typography>
-                    </td>
-                    <td className="p-4 md:table-cell">
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {username}
-                    </Typography>
-                  </td>
-                    <td className="p-4 md:table-cell">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {gender}
-                      </Typography>
-                    </td>
-                    <td className="p-4 md:table-cell">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {role}
-                      </Typography>
-                    </td>
-                    {/* Add more columns for other user properties */}
-                    <td className="p-4 md:table-cell">
-                    {recommended}
-                    </td>
-                    <td className="p-4 md:table-cell">
-                   {/*} {rankings[id] && rankings[id].map((data, index) => (
-                      <div key={`${id}-strand-${index}`}>
-                        <p>{index + 1}. {data.strand}</p>
-                      </div>
-                    ))}
-                   */}
-                    {rankings[id] && rankings[id].length > 0 && (
-                      <button  className="p-2 text-blue-600 hover:text-blue-800 focus:outline-none"
-                       onClick={() => openWhyModal()}>
-                        View more
-                      </button>
-                    )}
-                          
-                    </td>
-                    <td className="p-4 md:table-cell">
-                    <div className="flex items-center space-x-4">
-                    <button
-                      className="p-2 text-red-600 hover:text-red-800 focus:outline-none"
-                      onClick={() => openDeleteDialog(id)}
-                    >
-                      <MdDelete className="h-6 w-6" />
-                    </button>
-                
-                    <Link
-                      to={`/grades/${id}`}
-                      className="p-2 text-blue-600 hover:text-blue-800 focus:outline-none"
-                    >
-                    View Inputs  
-                    </Link>
-                  </div>
-                    </td>
-                  </tr>
-                ))}
+            }
           </tbody>
         </table>
       </Card>

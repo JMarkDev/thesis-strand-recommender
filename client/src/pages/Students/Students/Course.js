@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios'; 
 import Footer from "../../../components/Footer";
 import Dropdown from "../../../components/Dropdown"
+import api from "../../../api/api";
 export default function CoursePage() {
   const [courses, setCourses] = useState([])
   
   useEffect(() => {
-    axios
-      .get('http://backend.api.senior-high-school-strand-recommender.pro/course/fetch')
+    api.get('/course')
       .then((res) => {
         setCourses(res.data)
       })
@@ -19,8 +19,7 @@ export default function CoursePage() {
   const handleFilter = (strand) => {
     if (strand === 'Default') {
       // Load all courses
-      axios
-        .get('http://backend.api.senior-high-school-strand-recommender.pro/course/fetch')
+      api.get('/course')
         .then((res) => {
           setCourses(res.data);
         })
@@ -29,8 +28,7 @@ export default function CoursePage() {
         });
     } else {
       // Load courses based on the selected strand
-      axios
-        .get(`http://backend.api.senior-high-school-strand-recommender.pro/course/fetch/${strand}`)
+      api.get(`/course/fetch/${strand}`)
         .then((res) => {
           setCourses(res.data);
         })
@@ -55,7 +53,7 @@ export default function CoursePage() {
             courses.map((course) => (
               <div key={course.id} className='bg-gradient-to-b from-green-300 to-transparent dark:bg-black rounded-lg shadow-md dark:shadow-lg'>
                 <div className='m-5 card-body text-gray-700 dark:text-gray-100'>
-                  <img src={`http://backend.api.senior-high-school-strand-recommender.pro/${course.image}`} alt={course.title} className='w-full h-[230px]' />
+                  <img src={`${api.defaults.baseURL}/${course.image}`} alt={course.title} className='w-full h-[230px]' />
                   <h2 className='text-xl font-semibold py-3 dark:text-white'>{course.title}</h2>
                   <p className='text-base text-justify leading-6 mb-4 dark:text-white'>{course.description}</p>
                 </div>

@@ -4,6 +4,7 @@ import { TbArrowBackUp } from 'react-icons/tb';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ImCancelCircle } from 'react-icons/im';
+import api from '../../../api/api';
 
 function EditStrand() {
   const [formData, setFormData] = useState({
@@ -30,16 +31,16 @@ function EditStrand() {
   ];
 
   useEffect(() => {
-    axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/strand/fetch/${id}`)
+    api.get(`/strand/${id}`)
       .then((response) => {
         const data = response.data;
-        const imageData = data.image.split(',');
-        const recommendationConditions = JSON.parse(data.recommendationConditions || '{}');
+        const imageData = data[0].image.split(',');
+        const recommendationConditions = JSON.parse(data[0].recommendationConditions || '{}');
 
         setFormData((prevFormData) => ({
           ...prevFormData,
-          name: data.name,
-          description: data.description,
+          name: data[0].name,
+          description: data[0].description,
           image: imageData,
           selectedSubjects: Object.keys(recommendationConditions),
           recommendationConditions: {
@@ -82,8 +83,8 @@ function EditStrand() {
     updatedFormData.append('image', JSON.stringify(formData.image));
     if(e.target.type === "submit" ) {
       try {
-        const response = await axios.put(`http://backend.api.senior-high-school-strand-recommender.pro/strand/edit/${id}`, updatedFormData);
-        alert(response.data.data);
+        const response = await api.put(`/strand/update/${id}`, updatedFormData);
+        alert(response.data.message);
         navigate('/strand');
       } catch (error) {
         console.error('Error updating strand', error);
@@ -179,7 +180,7 @@ function EditStrand() {
         {formData.image?.map((image, index) => (
           <div key={index} className="relative mt-4 ml-3">
             <img
-              src={`http://backend.api.senior-high-school-strand-recommender.pro/uploads/${image}`}
+              src={`${api.defaults.baseURL}/uploads/${image}`}
               alt="strand"
               className="w-[100px] h-[100px] object-cover rounded-lg"
             />

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MdDelete } from 'react-icons/md';
 import { LiaEdit } from 'react-icons/lia';
-import axios from 'axios';
 import { Dialog, Transition } from "@headlessui/react";
 // import { GrView } from 'react-icons/gr';
 import { Fragment } from "react";
+import api from '../../../api/api';
 
 function CourseTable({ courses }) {
   const [courseList, setCourseList] = useState(courses);
@@ -35,7 +35,7 @@ function CourseTable({ courses }) {
 
   const handleDeleteCourse = async (id) => {
     try {
-      const response = await axios.delete(`http://backend.api.senior-high-school-strand-recommender.pro/course/delete/${id}`);
+      const response = await api.delete(`/course/delete/${id}`);
       console.log(response);
       // Update the course list without the deleted course
       const newCourseList = courseList.filter((course) => course.id !== id);
@@ -66,7 +66,6 @@ function CourseTable({ courses }) {
           </th>
           <th
             className="px-6 py-3 bg-[#a8a29e] dark:bg-[#292524] text-center text-xs leading-4 font-medium text-black dark:text-white uppercase tracking-wider"
-            s
           >
             Title
           </th>
@@ -98,7 +97,7 @@ function CourseTable({ courses }) {
                        <td className="px-6 py-4 whitespace-no-wrap">
                             <div className="relative group">
                                 <img
-                                src={`http://backend.api.senior-high-school-strand-recommender.pro/${course.image}`}
+                                src={`${api.defaults.baseURL}/${course.image}`}
                                     alt=""
                                     className="h-100 w-100 rounded-lg transition-transform transform scale-100 group-hover:scale-150"
                                 />

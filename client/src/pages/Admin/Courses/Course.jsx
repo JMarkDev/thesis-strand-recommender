@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import CourseTable from '../../components/CourseTable'
-import axios from 'axios'
-import Dropdown from '../../components/Dropdown'
+import CourseTable from './CourseTable'
+import Dropdown from '../../../components/Dropdown'
+import api from '../../../api/api'
 
 function Course() {
   const [courses, setCourses] = useState([])
   
   useEffect(() => {
-    axios
-      .get('http://backend.api.senior-high-school-strand-recommender.pro/course/fetch')
+    api.get('/course')
       .then((res) => {
         setCourses(res.data)
       })
@@ -22,8 +21,7 @@ function Course() {
 const handleFilter = (strand) => {
   if (strand === 'Default') {
     // Load all courses
-    axios
-      .get('http://backend.api.senior-high-school-strand-recommender.pro/course/fetch')
+    api.get('/course')
       .then((res) => {
         setCourses(res.data);
       })
@@ -32,8 +30,7 @@ const handleFilter = (strand) => {
       });
   } else {
     // Load courses based on the selected strand
-    axios
-      .get(`http://backend.api.senior-high-school-strand-recommender.pro/course/fetch/${strand}`)
+    api.get(`/course/fetch/${strand}`)
       .then((res) => {
         setCourses(res.data);
       })

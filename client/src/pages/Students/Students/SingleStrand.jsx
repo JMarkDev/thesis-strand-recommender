@@ -1,50 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import CarouselComponent from './CarouselComponent'
 import { TbArrowBackUp } from 'react-icons/tb';
 import Footer from '../../../components/Footer';
+import api from '../../../api/api';
+
 function SingleStrand() {
   const [courses, setCourses] = useState([]);
-  const [strand, setStrand] = useState({});
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('')
   const [strandImages, setStrandImages] = useState([]); // Store the image file
   const { id } = useParams();
+  // id value is STRAND NAME from strand parameter
 
   useEffect(() => {
-    axios
-      .get('http://backend.api.senior-high-school-strand-recommender.pro/course/fetch')
-      .then((res) => {
-        setCourses(res.data);
-      })
-      .catch((err) => {
+    const getFilteredCourse = async () => {
+      try {
+        const response = await api.get(`/course/fetch/${id}`)
+        setCourses(response.data);
+      } catch (err) {
         console.log(err);
-      });
-  }, []);
+      }
+    } 
+    getFilteredCourse();
+  }, [id])
 
   useEffect(() => {
-    axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/strand/fetch/${id}`)
-      .then((res) => {
-        res.data.description = res.data.description.replace(/\n/g, '<br>');
-        setStrand(res.data);
-  
-        // Check if res.data.image is an array, and if not, convert it to an array
-        const imagesArray = Array.isArray(res.data.image) ?
-          res.data.image.map(image => image.trim()) :
-          res.data.image.split(',').map(image => image.trim());
+    const getStrand = async () => {
+      try {
+        const response = await api.get(`/strand/${id}`)
+
+        const description = response.data[0].description.replace(/\n/g, '<br>');
+        setDescription(description);
+
+        setName(response.data[0].name)
+
+        const imagesArray = response.data[0].image.split(',');
         setStrandImages(imagesArray);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [id]);
+      } catch (error) {
+        console.log(error)
+      }
+    } 
+    getStrand();
+  }, [id])
   
-
-  function filterCoursesByStrand(courses, strandName) {
-    return courses.filter((course) => course.strand === strandName);
-  }
-
-  const filteredCourses = filterCoursesByStrand(courses, strand.name);
-
   return (
     <>
     <div className="p-5 lg:p-10 xl:p-20 bg-gradient-to-r from-gray-600 via-transparent to-sky-500 dark:bg-black ">
@@ -59,18 +58,18 @@ function SingleStrand() {
           
           <div
             className="mt-10 text-lg lg:text-2xl font-semi text-justify py-5 px-5 rounded-2xl text-black dark:text-white dark:bg-slate-700 bg-sky-100" 
-            dangerouslySetInnerHTML={{ __html: strand.description }}
+            dangerouslySetInnerHTML={{ __html: description }}
           ></div>
 
           <h1 className="text-2xl font-bold mt-5 text-white">
-            {strand.name} Strand Related Courses:
+            {name} Strand Related Courses:
           </h1>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 mt-5">
-            {filteredCourses.map((course) => (
+            {courses.map((course) => (
               <div key={course.id} className='bg-gradient-to-b from-green-300 to-transparent dark:bg-black rounded-lg shadow-md dark:shadow-lg'>
                 <div className='m-5 card-body text-gray-700 dark:text-gray-100'>
-                  <img src={`http://backend.api.senior-high-school-strand-recommender.pro/${course.image}`} alt={course.title} className='w-full h-[230px]' />
+                  <img src={`${api.defaults.baseURL}/${course.image}`} alt={course.title} className='w-full h-[230px]' />
                   <h2 className='text-xl font-semibold py-3 dark:text-white'>{course.title}</h2>
                   <p className='text-base text-justify leading-6 mb-4 dark:text-white'>{course.description}</p>
                 </div>

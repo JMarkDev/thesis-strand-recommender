@@ -8,6 +8,8 @@ import userLogo from "../../src/assets/images/user.png";
 import sm_logo from "../../src/assets/images/FLL.png";
 import '.././index.css'
 import { ThemeContext } from "./ThemeContext";
+import api from "../api/api";
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -37,7 +39,7 @@ const Navbar = () => {
   useEffect(() => {
     const getName = async () => {
       try {
-        const res = await axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/students/${userId}`);
+        const res = await api.get(`/students/${userId}`);
         const fullName = res.data[0].name;
         const userName = fullName.split(" ")[0];
         setName(userName);

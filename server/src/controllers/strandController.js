@@ -23,6 +23,17 @@ const getStrandById = async (req, res) => {
     }
 }
 
+const getStrandByName = async (req, res) => {
+  try {
+    const { name } = req.params;
+    const strand = await strandModel.getStrandByName(name);
+    return res.json(strand);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Internal Server Error"});
+  }
+}
+
 const addStrand = async (req, res) => {
     const { name, description, recommendationConditions } = req.body;
     const createdAt = new Date();
@@ -136,10 +147,55 @@ const deleteStrand = async (req, res) => {
     }
 }
 
+const strandRecommendedTotal = async (req, res) => {
+  try {
+    const result = await strandModel.getTotalStrandRecommended()
+
+    const strandCount = {};
+    let totalRecommended = 0; 
+    
+    result.forEach((row) => {
+      const strand = row.strand;
+      const recommendedCount = row.recommendedCount; // Use the correct name here
+      strandCount[strand] = recommendedCount;
+      totalRecommended += recommendedCount;
+    });
+    
+
+    // add total count for all strand columns
+    strandCount['TOTAL'] = totalRecommended
+    
+    // Convert the object into an array of objects with the "TOTAL" count first
+    const strandCountArray = Object.entries(strandCount).map(([strand , recommendedCount]) => ({ strand, recommendedCount }));
+    // put the total in first index
+    strandCountArray.sort((a, b) => (a.strand === 'TOTAL' ? - 1 : b.strand === 'TOTAL' ? 1 : 0));
+
+    return res.status(200).json(strandCountArray)
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+const getStrandMonthlyData = async (req, res) => {
+  const selectedYear = req.params.year;
+  
+  try {
+    const result = await strandModel.getMonthlyData(selectedYear);
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error'})
+  }
+}
+
 module.exports = {
     getAllStrands,
     getStrandById,
+    getStrandByName,
     addStrand,
     updateStrand,
-    deleteStrand
+    deleteStrand,
+    strandRecommendedTotal,
+    getStrandMonthlyData
 }

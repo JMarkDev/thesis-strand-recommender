@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../../index.css';
 import Loading from '../../../components/loading/loading'
+import api from '../../../api/api';
 // import { use } from '../../../../../server/src/Routes/Students';
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -54,7 +55,7 @@ const Input = () => {
       const reasonDataString = JSON.stringify(strandData);
       const studentId = localStorage.getItem('userId')
       
-      const response = await axios.post('http://backend.api.senior-high-school-strand-recommender.pro/rank/add', {
+      const response = await api.post('/ranking/add', {
         studentId: studentId, 
         strandRanking: reasonDataString  
       })
@@ -65,16 +66,16 @@ const Input = () => {
     }
   }, [strandData]);
 
-  useEffect(() => {
-    strandRanking(); 
-  }, [strandRank, strandRanking]);
+  // useEffect(() => {
+  //   strandRanking(); 
+  // }, [strandRank, strandRanking]);
 
     const topStrand = useCallback(async () => {
     const topStrand = strandData[0]?.strand;
   
     try {
       const studentId = localStorage.getItem('userId');
-      const response = await axios.put(`http://backend.api.senior-high-school-strand-recommender.pro/students/update-recommended/${studentId}`, {
+      const response = await api.put(`/students/update-recommended/${studentId}`, {
         recommended: topStrand,
       });
       console.log(response.data);
@@ -105,7 +106,7 @@ const Input = () => {
 
   const recommendationConditions = async () => {
   try {
-    const response = await axios.get('http://backend.api.senior-high-school-strand-recommender.pro/strand/recommendation-conditions/all');
+    const response = await api.get('/strand/recommendation-conditions/all');
     const data = response.data;
 
     setData(data)
@@ -356,7 +357,7 @@ const handleSubmit = async (e) => {
   };
 
   try {
-    await axios.post('http://backend.api.senior-high-school-strand-recommender.pro/grades/add', formDataObject);
+    await api.post('/grades/add', formDataObject);
 
     await finalRanking()
 
@@ -372,7 +373,7 @@ const handleSubmit = async (e) => {
 
 
     useEffect(() => {
-      axios.get('http://backend.api.senior-high-school-strand-recommender.pro/course/fetch')
+      api.get('/course')
       .then((res) => {
          setCourseOption(res.data)
       })

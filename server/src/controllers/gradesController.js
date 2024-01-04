@@ -22,10 +22,10 @@ const getGradesById = async (req, res) => {
 }
 
 const addGrades = async (req, res) => {
-    const { studentId, math, science, english, mapeh, arpan, filipino, esp, average, course } = req.body;
+    const { studentId, math, science, english, mapeh, arpan, filipino, esp, average, course, strand } = req.body;
     
     try {
-        const result = await gradesModel.addGrades(studentId, math, science, english, mapeh, arpan, filipino, esp, average, course);
+        const result = await gradesModel.addGrades(studentId, math, science, english, mapeh, arpan, filipino, esp, average, course, strand);
         res.status(201).json({ status: "success", message: "Grades added successfully", result});
     } catch (error) {
         console.error(error);
@@ -35,10 +35,10 @@ const addGrades = async (req, res) => {
 
 const updateGrades = async (req, res) => {
     const { studentId } = req.params;
-    const { math, science, english, mapeh, arpan, filipino, esp, average, course } = req.body;
+    const { math, science, english, mapeh, arpan, filipino, esp, average, course, strand} = req.body;
 
     try {
-        const result = await gradesModel.updateGrades(studentId, math, science, english, mapeh, arpan, filipino, esp, average, course);
+        const result = await gradesModel.updateGrades(studentId, math, science, english, mapeh, arpan, filipino, esp, average, course, strand);
         res.status(200).json({ status: "success", message: "Grades updated successfully", result});
     } catch (error) {
         console.error(error);

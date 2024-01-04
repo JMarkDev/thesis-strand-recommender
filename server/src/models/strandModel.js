@@ -24,6 +24,10 @@ const getAllStrand = async () => {
 const getStrandById = async (id) => {
     try {
         const result = await executeQuery('SELECT * FROM strand WHERE id =?', [id]);
+        // if(result.length > 0) {
+        //     result[0].recommendationConditions = JSON.parse(result[0].recommendationConditions);
+        // }
+        // console.log(result)
         return result;
     } catch (error) {
         console.error(error);
@@ -34,7 +38,6 @@ const getStrandById = async (id) => {
 const getStrandByName = async (name) => {
     try {
         const result = await executeQuery('SELECT * FROM strand WHERE name =?', [name]);
-        console.log(result);
         return result;
     } catch (error) {
         console.log(error);
@@ -89,7 +92,6 @@ const getTotalStrandRecommended = async () => {
         FROM strand AS s
         LEFT JOIN student AS r ON s.name = r.recommended
         GROUP BY s.name
-        ORDER BY s.id;
          `)
         return result;
     } catch (error) {
@@ -134,8 +136,13 @@ const getMonthlyData = async (selectedYear) => {
                 LEFT JOIN student AS r ON months.monthName = DATE_FORMAT(r.createdAt, '%b %Y')
                 LEFT JOIN strand AS s ON r.recommended = s.name
                 GROUP BY month
-                ORDER BY months.monthIndex;
             `;
+
+            {/*
+            add this when the months are not in order
+            GROUP BY month
+            ORDER BY months.monthIndex;
+            */}
 
         // Step 4: Execute the dynamic query 
         const results = await executeQuery(dynamicQuery);

@@ -5,7 +5,16 @@ const fs = require('fs');
 const getAllStrands = async (req, res) => {
     try {
         const strands = await strandModel.getAllStrand();
-        return res.json(strands);
+
+        strands.forEach((strand) => {
+            const parsedConditions = JSON.parse(strand.recommendationConditions);
+            strand.recommendationConditions = parsedConditions;
+
+            const strandImages = strand.image.split(',');
+            strand.image = strandImages;
+        })
+
+        return res.status(200).json(strands);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal server error' });
@@ -16,7 +25,25 @@ const getStrandById = async (req, res) => {
     try {
         const { id } = req.params;
         const strand = await strandModel.getStrandById(id);
-        return res.json(strand);
+
+        const strandData = strand.map((strand) => {
+            return {
+                id: strand.id,
+                image: strand.image,
+                name: strand.name,
+                description: strand.description,
+                recommendationConditions: JSON.parse(strand.recommendationConditions),
+                createdAt: strand.createdAt
+            }
+        })
+
+        // const parsedConditions = JSON.parse(strand[0].recommendationConditions);
+        // strand[0].recommendationConditions = parsedConditions;
+
+        // const arrayImages = strand[0].image.split(',');
+        // strand[0].image = arrayImages;
+        
+        return res.status(200).json(strandData);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal server error' });
@@ -27,6 +54,8 @@ const getStrandByName = async (req, res) => {
   try {
     const { name } = req.params;
     const strand = await strandModel.getStrandByName(name);
+    const parsedConditions = JSON.parse(strand[0].recommendationConditions);
+    strand[0].recommendationConditions = parsedConditions;
     return res.json(strand);
   } catch (err) {
     console.error(err);

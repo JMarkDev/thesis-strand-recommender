@@ -5,15 +5,14 @@ const multer = require('multer');
 const upload = multer({ dest: './uploads' });
 const strandController = require('../controllers/strandController');
 
-router
-    .get('/:name', strandController.getStrandByName)
-    .get('/total', strandController.strandRecommendedTotal)
-    .get('/', strandController.getAllStrands)
-    .get('/:id', strandController.getStrandById)
-    .get('/monthly/:year', strandController.getStrandMonthlyData)
+router.get('/total', strandController.strandRecommendedTotal)
+router.get('/monthly/:year', strandController.getStrandMonthlyData)
+router.get('/id/:id', strandController.getStrandById)
+router.get('/name/:name', strandController.getStrandByName)
+router.get('/all', strandController.getAllStrands)
 
-    .post('/add', upload.array('image', 5), strandController.addStrand)
-    .put('/update/:id', upload.array("image", 5) ,strandController.updateStrand)
-    .delete('/delete/:id', strandController.deleteStrand)
+router.post('/add', upload.array('image', 5), strandController.addStrand)
+router.put('/update/:id', upload.array("image", 5) ,strandController.updateStrand)
+router.delete('/delete/:id', strandController.deleteStrand)
 
 module.exports = router;

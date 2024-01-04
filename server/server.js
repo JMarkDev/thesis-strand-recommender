@@ -23,6 +23,7 @@ const strandRoute = require("./src/Routes/strandRoute.js")
 const courseRoute = require("./src/Routes/courseRoute.js")
 const gradesRoute = require("./src/Routes/gradesRoute.js")
 const rankingRoute = require("./src/Routes/rankingRoute.js")
+const recommendedRoute = require("./src/Routes/recommendedRoute.js")
 
 app.use(cors({
   origin: "http://localhost:3000",
@@ -55,6 +56,7 @@ app.use('/strand', strandRoute);
 app.use('/course', courseRoute);
 app.use('/grades', gradesRoute);
 app.use('/ranking', rankingRoute);
+app.use('/recommended', recommendedRoute)
 
 
 app.get('/', verifyUser,(req, res) => {

@@ -107,7 +107,7 @@ function StrandTable({ strand }) {
                           </div>
                           */}
                           <img
-                            src={`${api.defaults.baseURL}/uploads/${strand.image.split(',')[0]}`}
+                            src={`${api.defaults.baseURL}/uploads/${strand.image[0]}`}
                             alt=""
                             className="h-100 w-100 rounded-lg transition-transform transform scale-100 group-hover:scale-150"
                           />

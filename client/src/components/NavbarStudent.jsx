@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
 import Toggle from "./ThemeToggle";
 import HamburgerButton from "./HamburgerMenuButton/HamburgerButton";
 import logo from "../../src/assets/images/FLL.png";

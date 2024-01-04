@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import axios from 'axios';
 import api from '../api/api';
 
 function classNames(...classes) {
@@ -19,7 +18,7 @@ export default function Dropdown(props) {
 
   useEffect(() => {
     const handleFilter = async () => {
-      await api.get('/strand', {
+      await api.get('/strand/all', {
         params: {
           filter: selectedFilter
         }

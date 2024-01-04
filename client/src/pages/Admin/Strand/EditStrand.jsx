@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TbArrowBackUp } from 'react-icons/tb';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { ImCancelCircle } from 'react-icons/im';
 import api from '../../../api/api';
 
@@ -17,7 +16,6 @@ function EditStrand() {
   
   const navigate = useNavigate();
   const { id } = useParams();
-  
 
   const subjects = [
     'math',
@@ -31,11 +29,12 @@ function EditStrand() {
   ];
 
   useEffect(() => {
-    api.get(`/strand/${id}`)
+    api.get(`/strand/id/${id}`)
       .then((response) => {
         const data = response.data;
         const imageData = data[0].image.split(',');
-        const recommendationConditions = JSON.parse(data[0].recommendationConditions || '{}');
+        const recommendationConditions = data[0].recommendationConditions || {};
+
 
         setFormData((prevFormData) => ({
           ...prevFormData,

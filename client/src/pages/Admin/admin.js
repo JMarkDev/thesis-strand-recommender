@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, Typography } from "@material-tailwind/react";
-import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { MdDelete } from "react-icons/md";
@@ -10,8 +9,6 @@ import api from "../../api/api";
 
 export function Admin() {
   const [userData, setUserData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
   const [deleteUserId, setDeleteUserId] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [name, setName]= useState('')

@@ -28,7 +28,7 @@ function SingleStrand() {
   useEffect(() => {
     const getStrand = async () => {
       try {
-        const response = await api.get(`/strand/${id}`)
+        const response = await api.get(`/strand/name/${id}`)
 
         const description = response.data[0].description.replace(/\n/g, '<br>');
         setDescription(description);

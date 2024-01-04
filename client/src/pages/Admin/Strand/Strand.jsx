@@ -9,7 +9,7 @@ function Strand() {
   useEffect(() => {
     const getStrandData = async () => {
       try {
-        const response = await api.get('/strand');
+        const response = await api.get('/strand/all');
         setStrand(response.data)
       } catch (err) {
         console.error(err);

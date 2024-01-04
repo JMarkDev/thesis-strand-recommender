@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TbArrowBackUp } from 'react-icons/tb';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../../api/api';
 
@@ -66,7 +65,7 @@ function EditCourse() {
 
   const strandOptions = async () => {
     try{
-      const response = await api.get('/strand');
+      const response = await api.get('/strand/all');
       const strands = response.data.map((strand) => strand.name);
       setStrands(strands);
     }

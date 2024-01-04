@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { FaUser } from "react-icons/fa"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 import PieComponent from './PieComponent';
-import axios from 'axios';
 import YearDropdown from '../../components/YearDropdown'
 import api from '../../api/api';
 

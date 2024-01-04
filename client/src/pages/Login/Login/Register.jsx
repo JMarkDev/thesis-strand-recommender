@@ -36,7 +36,10 @@ export default function Register() {
     setConfirmPasswordError("");
   
     try {
-      const response = await api.post("/register", values);
+      const response = await api.post("/register", values, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
       console.log(response.data);
   
       if (response.data.status === "success") {

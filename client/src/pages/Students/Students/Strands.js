@@ -6,7 +6,7 @@ export default function Strands() {
   const [strand, setStrand] = useState([])
 
   useEffect(() => {
-    api.get('/strand')
+    api.get('/strand/all')
     .then((res) => {
       setStrand(res.data)
     })
@@ -40,7 +40,7 @@ export default function Strands() {
           strand.map((strand) => (
             // <div className='m-5 dark:bg-[#273242]'>
               <div key={strand.id}  className='my-5 dark:bg-[#273242] shadow-lg bg-gradient-to-b from-gray-400 to-transparent rounded p-5 flex flex-col lg:flex-row items-center'>
-                <img className='w-full lg:w-[50%] h-96 rounded-lg' src={`${api.defaults.baseURL}/uploads/${strand.image.split(',')[0]}`} alt='strand img' />
+                <img className='w-full lg:w-[50%] h-96 rounded-lg' src={`${api.defaults.baseURL}/uploads/${strand.image[0]}`} alt='strand img' />
                 <div className='w-full lg:w-[50%]'>
                   <h1 className='text-2xl lg:ml-5 my-3 leading-normal'>{strand.name}</h1>
                   <p className='lg:ml-5 leading-normal text-justify pb-10'>{truncateText(strand.description, 500)}</p>

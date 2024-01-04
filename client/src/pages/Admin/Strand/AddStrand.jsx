@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { TbArrowBackUp } from 'react-icons/tb';
-import axios from 'axios';
 import api from '../../../api/api';
 
 function AddStrand() {
@@ -82,11 +81,10 @@ function AddStrand() {
 
     try {
       const response = await api.post('/strand/add', data);
-      console.log(response.data)
       alert(response.data.message);
       navigate('/strand')
     } catch (error) {
-      alert(error.response.data.Error)
+      alert(error.response.data.message)
     }
   };
 

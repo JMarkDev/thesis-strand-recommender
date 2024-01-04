@@ -2,16 +2,23 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { TbArrowBackUp } from "react-icons/tb";
+import api from "../../api/api";
 
 function Add_admin() {
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [registrationStatus, setRegistrationStatus] = useState(null);
+  const [nameError, setNameError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [genderError, setGenderError] = useState("");
 
   const navigate = useNavigate();
   const [values, setValues] = useState({
     name: "",
-    username: "", // Assuming username maps to email
+    username: "", 
     password: "",
+    confirmPassword: "",
     gender: "",
     role: "admin", // Set a default role
   });
@@ -19,37 +26,67 @@ function Add_admin() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    if (values.password !== passwordConfirmation) {
-      console.error("Password and password confirmation do not match");
-      return;
-    }
+    setNameError("");
+    setUsernameError("");
+    setPasswordError("");
+    setConfirmPasswordError("");
+    setGenderError("");
 
     try {
-      // Set the role to "admin" before sending the POST request
-      values.role = "admin";
+      const response = await api.post("/register", values);
+      console.log(response.data)
     
-      const response = await axios.post("http://backend.api.senior-high-school-strand-recommender.pro/register", values);
+      console.log("Response from server:", response);
     
-      console.log("Response from server:", response); // Add this line for debugging
-    
-      if (response.data.status === "success") {
-        setRegistrationStatus("success");
-        alert("Added Successfully");
-        navigate('/admin');
-      } else {
-        setRegistrationStatus("error");
-      }
+      // if (response.data.status === "success") {
+      //   setRegistrationStatus("success");
+      //   alert("Added Successfully");
+      //   navigate('/admin');
+      // } else {
+      //   setRegistrationStatus("error");
+      // }
     } catch (error) {
-      setRegistrationStatus("error");
-      alert(error.response ? error.response.data.message : "An error occurred during registration.");
-    }
+      // setLoader(false);
+
+      if (error.response && error.response.data.status === 'error') {
+        setUsernameError(error.response.data.message);
+      }
+  
+      if (error.response && error.response.data.errors) {
+        error.response.data.errors.forEach((error) => {
+          switch (error.path) {
+            case 'name':
+              setNameError(error.msg);
+              break;
+            case 'gender':
+              setGenderError(error.msg);
+              break;
+            case 'username':
+              setUsernameError(error.msg);
+              break;
+            case 'password':
+              setPasswordError(error.msg);
+              break;
+            case 'confirmPassword':
+              setConfirmPasswordError(error.msg);
+              break;
+            default:
+              // Handle other errors as needed
+              break;
+          }
+        });
+      } else {
+        // Handle unexpected errors
+        console.error("Unexpected error:", error);
+      }
+      }
     };
 
   return (
     <div>
     <Link to={'/admin'} className="py-2 rounded-lg bg-gray-700 text-white hover:bg-orange-500 flex items-center justify-center w-20 text-center"><TbArrowBackUp />Back</Link>
-        <div className="w-full m-auto px-6 py-4 mt-6 overflow-hidden border border-black dark:border-white shadow-md sm:max-w-lg sm:rounded-lg  bg-gray-200 dark:bg-gray-700">
-        <h2 className="text-2xl font-semibold text-center mt-4 dark:text-white  hover:bg-orange-500">Add Admin</h2>
+        <div className="w-full m-auto px-6 py-4 overflow-hidden border border-black dark:border-white shadow-md sm:max-w-lg sm:rounded-lg  bg-gray-200 dark:bg-gray-700">
+        <h2 className="text-2xl font-semibold text-center mt-4 dark:text-white ">Add Admin</h2>
         <form onSubmit={handleRegister}>
           <div>
             <label
@@ -66,9 +103,12 @@ function Add_admin() {
                 onChange={e =>
                   setValues({ ...values, name: e.target.value })
                 }
-                className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={`block w-full rounded-md border py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                  nameError  ? 'border-red-600' : '' // Apply border-red-600 class when there's an error
+                }`}
               />
             </div>
+            {nameError && <div className="text-red-600 text-sm">{nameError}</div>}
           </div>
           <div className="mt-4">
             
@@ -99,8 +139,8 @@ function Add_admin() {
                 />
                 <span className="ml-2 dark:text-white">Female</span>
               </label>
-              
             </div>
+            {genderError && <div className="text-red-600 text-sm">{genderError}</div>}
           </div>
           <div className="mt-4">
             <label
@@ -111,13 +151,16 @@ function Add_admin() {
             </label>
             <div className="flex flex-col items-start">
               <input
-                type="email"
+                type="text"
                 name="email"
                 value={values.username} // Use values.username
                 onChange={e => setValues({ ...values, username: e.target.value })} // Update values.username
-                className="block w-full rounded-md py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={`block w-full rounded-md border py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                  usernameError  ? 'border-red-600' : '' // Apply border-red-600 class when there's an error
+                }`}
               />
             </div>
+            {usernameError && <div className="text-red-600 text-sm">{usernameError}</div>}
           </div>
          
           <div className="mt-4">
@@ -133,9 +176,12 @@ function Add_admin() {
                 name="password"
                 value={values.password}
                 onChange={e => setValues({ ...values, password: e.target.value })}
-                className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={`block w-full rounded-md border py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                  passwordError  ? 'border-red-600' : '' // Apply border-red-600 class when there's an error
+                }`}
               />
             </div>
+            {passwordError && <div className="text-red-600 text-sm">{passwordError}</div>}
           </div>
           <div className="mt-4">
             <label
@@ -147,12 +193,15 @@ function Add_admin() {
             <div className="flex flex-col items-start">
               <input
                 type="password"
-                name="password_confirmation"
-                value={passwordConfirmation}
-                onChange={e => setPasswordConfirmation(e.target.value)}
-                className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                name="confirmPassword"
+                value={values.confirmPassword}
+                onChange={e => setValues({ ...values, confirmPassword: e.target.value})}
+                className={`block w-full rounded-md border py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                  confirmPasswordError  ? 'border-red-600' : '' // Apply border-red-600 class when there's an error
+                }`}
               />
             </div>
+            {confirmPasswordError && <div className="text-red-600 text-sm">{confirmPasswordError}</div>}
           </div>
           <div className="flex items-center mt-4">
             <button

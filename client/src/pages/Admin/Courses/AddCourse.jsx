@@ -47,7 +47,7 @@ function AddCourse() {
 
   const strandOptions = async () => {
     try{
-      const response = await api.get('/strand');
+      const response = await api.get('/strand/all');
       const strands = response.data.map((strand) => strand.name);
       setStrands(strands);
     }

@@ -1,4 +1,5 @@
 const Database = require("../configs/Database");
+const gradesController = require("../controllers/gradesController")
 
 const db = new Database();
 const conn = db.connection;
@@ -35,7 +36,8 @@ const addGrades = async (studentId, math, science, english, mapeh, arpan, filipi
     try {
         const result = await executeQuery("INSERT INTO grades (studentId, math, science, english, mapeh, arpan, filipino, esp, average, course, strand) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
         [studentId, math, science, english, mapeh, arpan, filipino, esp, average, course, strand]);
-        return {status: "success", result };
+
+        return result;
     } catch (error) {
         console.error(error);
         throw error;
@@ -53,9 +55,20 @@ const updateGrades = async (studentId, math, science, english, mapeh, arpan, fil
     }
 }
 
+const deleteGrades = async (studentId) => {
+    try {
+        const result = await executeQuery("DELETE FROM grades WHERE studentId = ?", [studentId]);
+        return {status: "success", result };
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 module.exports = {
     getAllGrades,
     getGradesById,
     addGrades,
-    updateGrades
+    updateGrades,
+    deleteGrades
 }

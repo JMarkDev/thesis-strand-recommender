@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { TbArrowBackUp } from 'react-icons/tb';
-import axios from 'axios';
-
+import api from '../../.././api/api'
 function Grades() {
   const [data, setData] = useState([]);
   const { id } = useParams();
@@ -10,13 +9,16 @@ function Grades() {
   useEffect(() => {
     const getGradesData = async () => {
       try {
-        const response = await axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/grades/${id}`);
-        setData(response.data);
+        const response = await api.get(`/grades/${id}`);
+        // remove the strand property from the response
+        const filterData = response.data.map(({ strand, ...data}) => data);
+
+        setData(filterData);
       } catch (err) {
         console.log(err);
       }
     };
-    getGradesData();
+    getGradesData(); 
   }, [id]);
 
   function capitalizeFirstLetter(str) {

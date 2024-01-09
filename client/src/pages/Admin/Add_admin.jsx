@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { TbArrowBackUp } from "react-icons/tb";
 import api from "../../api/api";
+import AdminOTP from "../Authentication/AdminOTP";
+import Loading from "../.././components/loading/otpLoader/otpLoader";
 
 function Add_admin() {
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
@@ -12,6 +13,8 @@ function Add_admin() {
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [genderError, setGenderError] = useState("");
+  const [displayOTP, setDisplayOTP] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const navigate = useNavigate();
   const [values, setValues] = useState({
@@ -26,6 +29,8 @@ function Add_admin() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    setLoader(true);
+
     setNameError("");
     setUsernameError("");
     setPasswordError("");
@@ -37,6 +42,10 @@ function Add_admin() {
       console.log(response.data)
     
       console.log("Response from server:", response);
+      if (response.data.status === "success") {
+        setDisplayOTP(true);
+        setLoader(false);
+      }
     
       // if (response.data.status === "success") {
       //   setRegistrationStatus("success");
@@ -46,7 +55,7 @@ function Add_admin() {
       //   setRegistrationStatus("error");
       // }
     } catch (error) {
-      // setLoader(false);
+      setLoader(false);
 
       if (error.response && error.response.data.status === 'error') {
         setUsernameError(error.response.data.message);
@@ -85,9 +94,21 @@ function Add_admin() {
   return (
     <div>
     <Link to={'/admin'} className="py-2 rounded-lg bg-gray-700 text-white hover:bg-orange-500 flex items-center justify-center w-20 text-center"><TbArrowBackUp />Back</Link>
+        {
+          loader && 
+          <div className="absolute top-[50%] lg:right-[40%] right-[50%]">
+            <Loading/>
+          </div>
+        }
+        
+        {
+          displayOTP ? <AdminOTP username={values.username}/> 
+          : 
+       
         <div className="w-full m-auto px-6 py-4 overflow-hidden border border-black dark:border-white shadow-md sm:max-w-lg sm:rounded-lg  bg-gray-200 dark:bg-gray-700">
         <h2 className="text-2xl font-semibold text-center mt-4 dark:text-white ">Add Admin</h2>
-        <form onSubmit={handleRegister}>
+
+          <form onSubmit={handleRegister}>
           <div>
             <label
               htmlFor="name"
@@ -213,6 +234,7 @@ function Add_admin() {
           </div>
         </form>
         </div>
+    }
     </div>
   )
 }

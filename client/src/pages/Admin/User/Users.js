@@ -9,11 +9,8 @@ import api from "../../../api/api";
 
 export function Users() {
   const [userData, setUserData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
   const [deleteUserId, setDeleteUserId] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [filterData, setFilterData] = useState([]);
   const [rankings, setRankings] = useState({});
   const [isWhyModalOpen, setIsWhyModalOpen] = useState(false);
   const [strandData, setStrandData] = useState([]);
@@ -27,35 +24,6 @@ export function Users() {
     setIsWhyModalOpen(false);
   };
 
-  // useEffect(() => {
-  //   // Specify the role you want to fetch (in this case, "student")
-  //   const getUserData = async () => {
-  //     try {
-  //       const response = await api.get('/students')
-  //       setUserData(response.data);
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  //   getUserData()
-  // }, []);
-  
-
-
-  // useEffect(() => {
-  //   if (searchQuery === "") {
-  //     setSuggestions([]);
-  //     return;
-  //   }
-  //   // Filter user data based on the search query
-  //   const filteredSuggestions = userData.filter((user) =>
-  //     user.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-  //   );
-
-  //   setSuggestions(filteredSuggestions);
-  // }, [searchQuery, userData]);
-  // console.log(suggestions)
-
   const openDeleteDialog = (id) => {
     setDeleteUserId(id);
     setIsDeleteDialogOpen(true);
@@ -65,31 +33,32 @@ export function Users() {
     setDeleteUserId(null);
     setIsDeleteDialogOpen(false);
   };
+
   useEffect(() => {
     const handleRanking = async (id) => {
       try {
         const response = await api.get(`/ranking/${id}`);
-        if (response.data && response.data.length > 0 && response.data[0].strandRanking) {
-          const strandRankingArray = JSON.parse(response.data[0].strandRanking);
+
+        if (response.data && response.data.length > 0 ) {
+          const strandRankingArray = response.data[0].strandRanking;
           setRankings((prevRankings) => ({
             ...prevRankings,
             [id]: strandRankingArray,
           }));
 
           if (strandRankingArray.length > 0) {
-            const strandData = strandRankingArray.map(({ strand, reason }) => ({ strand, reason }));
+            const strandData = strandRankingArray.map(({ name, reasons }) => ({ name, reasons }));
             setStrandData(strandData);
-            console.log(strandData);
           } else {
             console.log('No ranking data found in the response');
           }
         }
+
       } catch (err) {
         console.log(err);
       }
     };
-  
-    // Assuming you have an array of user IDs (replace [644] with your actual array)
+
     const userIds = userData.map((user) => user.id);
   
     // Fetch ranking for each user ID
@@ -237,11 +206,11 @@ export function Users() {
               </Typography>
             </th>
             <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4 md:table-cell bg-[#a8a29e] dark:bg-[#292524] text-black dark:text-white">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="font-normal leading-none opacity-70 mr-20" 
-              >
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70 "
+                >
                   Strand Ranking
                 </Typography>
               </th>
@@ -290,13 +259,7 @@ export function Users() {
                   <td className="p-4 md:table-cell" key={`${id}-strand`}>
                     
                   <div className="text-left md:table-cell" key={`${id}-strand`}>
-                {/**
-              {rankings[id] && rankings[id].map((data, index) => (
-                    <div key={`${id}-strand-${index}`}>
-                      <p>{index + 1}. {data.strand}</p>
-                    </div>
-                  ))}
-              */}
+
                   {rankings[id] && rankings[id].length > 0 && (
                     <button  className="p-2 text-blue-600 hover:text-blue-800 focus:outline-none"
                     onClick={() => openWhyModal()}>
@@ -304,8 +267,6 @@ export function Users() {
                     </button>
                   )}
                                
-
-
                     <div
                 className={`fixed inset-0 flex items-center justify-center z-50 ${
                   isWhyModalOpen ? 'block' : 'hidden'
@@ -319,7 +280,7 @@ export function Users() {
                           {strandData.map((data, index) => (
                                                 <li key={index} className="mb-4 flex items-center">
                     <span className="text-2xl text-blue-600 dark:text-blue-300 mr-2">{index + 1}.</span>
-                    <span className="text-xl">{`${data.strand}: "${data.reason}"`}</span>
+                    <span className="text-xl">{`${data.name}: "${data.reasons}"`}</span>
                   </li>
                 ))}
               </ul>

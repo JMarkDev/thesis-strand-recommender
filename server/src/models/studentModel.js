@@ -58,7 +58,7 @@ const deleteStudent = async (id) => {
 const updateRecommended = async (id, recommended) => {
     try {
         const result = await executeQuery("UPDATE student SET recommended =? WHERE id =?", [recommended, id]);
-        return { status: "success", result };
+        return result;
     } catch (error) {
         console.error(error);
         throw error;

@@ -1,6 +1,7 @@
 const recommendedModel = require('../models/recommendedModel');
 const gradesModel = require('../models/gradesModel');
-const { check } = require('express-validator');
+const studentModel = require('../models/studentModel');
+const rankingModel = require('../models/rankingModel');
 // const recommendedModel = require('../models/recommendedModel');
 
 const getStrandConditions = async (req, res) => {
@@ -60,39 +61,22 @@ const recommendStrand = async (studentId) => {
             return allSubjectsMeetConditions;
         };
 
-        // get the recommended strand
-        const getRecommendedStrand = () => {
-            const studentStrand = getGradesById[0].strand
-            if (checkAverageConditions() || checkSubjectConditions()) {
-                console.log(studentStrand)
-                return studentStrand;
+            // check if the average meet the conditions
+        const checkAllAverageConditions = (strandName) => {
+            const meetAllAverage = getAllRecommendationConditions.find((strand) => {
+                return strand.name === strandName && getGradesById[0].average >= strand.recommendationConditions.average;
+            });
+
+            if (meetAllAverage) {
+                return true;
             } else {
-                console.log('not meet the conditions');
+                return false;
             }
-        }
-        // run the function to get the recommended strand
-        getRecommendedStrand();
+        };
 
         // get the ranking of the strand
-
         const getStrandRanking = () => {
             const studentStrand = getGradesById[0].strand;
-
-        
-           
-        
-
-            const checkAllAverageConditions = (strandName) => {
-                const meetAllAverage = getAllRecommendationConditions.find((strand) => {
-                    return strand.name === strandName && getGradesById[0].average >= strand.recommendationConditions.average;
-                });
-
-                if (meetAllAverage) {
-                    return true;
-                } else {
-                    return false;
-                }
-            };
         
             const strandRanking = [];
 
@@ -100,15 +84,6 @@ const recommendStrand = async (studentId) => {
                 const meetAverage = checkAllAverageConditions(strand.name);  // pass the strand to checkAverageConditions function
                 const meetGrades = checkSubjectConditions(strand.name);  // pass the strand to checkSubjectConditions function
                 const meetStrandGradeCourse = meetAverage && meetGrades && studentStrand === strand.name;
-                
-                console.log('Strand:', strand.name);
-                console.log('Meet Strand, Grade, Course:', meetStrandGradeCourse);
-                console.log('Meet average and grades:', meetAverage && meetGrades);
-                console.log('Meet average and course:', meetAverage && studentStrand === strand.name);
-                console.log('Meet grades and course:', meetGrades && studentStrand === strand.name);
-                console.log('Meet Average:', meetAverage);
-                console.log('Meet Grades:', meetGrades);
-                console.log('Meet Course:', studentStrand === strand.name);
 
                  // ranking reasons
             const strandRankingReasons = {
@@ -154,32 +129,53 @@ const recommendStrand = async (studentId) => {
                 strandRanking.push({ name: strand.name, condition, reasons})
             });
             
-                const conditionsOrder = {
-                    'meet average, grades and course': 1, 
-                    'meet average and grades': 2,
-                    'meet average and course': 3,
-                    'meet grades and course': 4,
-                    'meet average': 5,
-                    'meet grades': 6,
-                    'meet course': 7,
-                    'not meet conditions': 8,
-                };
+            const conditionsOrder = {
+                'meet average, grades and course': 1, 
+                'meet average and grades': 2,
+                'meet average and course': 3,
+                'meet grades and course': 4,
+                'meet average': 5,
+                'meet grades': 6,
+                'meet course': 7,
+                'not meet conditions': 8,
+            };
 
             strandRanking.sort((strandA, strandB) => {
                 return conditionsOrder[strandA.condition] - conditionsOrder[strandB.condition];
             });
-            
-            console.log(strandRanking);         
+
+            return strandRanking;
         }
 
-        getStrandRanking();
-        console.log(getGradesById)
-        
+        // run the function to get the strand ranking
+        const strandRankingArray = getStrandRanking();
+        // console.log(strandRankingArray)
 
-    console.log(getAllRecommendationConditions)
-    // console.log(getGradesById)
+        // add the ranking to the database
+        const addRanking = await rankingModel.addRanking(studentId, JSON.stringify(strandRankingArray));
+        console.log(addRanking)
 
-        // await getStrandRanking(studentId)
+        // get the first strand in the ranking
+        const getFirstStrand = strandRankingArray[0].name;
+
+         // get the recommended strand
+         let recommendedStrandData = ''
+
+         const getRecommendedStrand = async () => {
+            const studentStrand = getGradesById[0].strand
+            if (checkAverageConditions() || checkSubjectConditions(studentStrand)) {
+                recommendedStrandData = studentStrand;
+            } else {
+                recommendedStrandData = getFirstStrand;
+            }
+
+            // update the recommended strand in student data 
+            const updateRecommended = await studentModel.updateRecommended(studentId, recommendedStrandData);
+            return updateRecommended;
+        }
+
+        getRecommendedStrand();
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal server error' });
@@ -190,5 +186,6 @@ const recommendStrand = async (studentId) => {
 module.exports = {
     getStrandConditions,
     recommendStrand,
+    // updateRecommended
     // getStrandRanking
 }

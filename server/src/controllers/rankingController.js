@@ -13,7 +13,13 @@ const getRankingByStudentId = async (req, res) => {
     const { id } = req.params;
     try {
         const result = await rankingModel.getRankingByStudentId(id);
-        res.status(200).json({ status:'success', data: result })
+
+        result.forEach((ranking) => {
+            const parsedRanking = JSON.parse(ranking.strandRanking);
+            ranking.strandRanking = parsedRanking;
+        })
+
+        res.status(200).json(result)
     } catch (error) {
         throw error;
     }

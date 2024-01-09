@@ -32,6 +32,12 @@ const getRankingByStudentId = async (studentId) => {
 
 const addRanking = async (studentId, strandRanking) => {
     try {
+        const getRanking = await getRankingByStudentId(studentId);
+
+        if (getRanking.length > 0) {
+            await deleteRanking(studentId);
+        }
+
         const query = "INSERT INTO ranking (studentId, strandRanking) VALUES (?, ?)";
         const result = await executeQuery(query, [studentId, strandRanking]);
         return result;
@@ -50,9 +56,20 @@ const updateRanking = async (studentId, strandRanking) => {
     }
 }
 
+const deleteRanking = async (studentId) => {
+    try {
+        const query = "DELETE FROM ranking WHERE studentId = ?";
+        const result = await executeQuery(query, [studentId]);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     getAllRanking,
     getRankingByStudentId,
     addRanking,
-    updateRanking
+    updateRanking,
+    deleteRanking
 }

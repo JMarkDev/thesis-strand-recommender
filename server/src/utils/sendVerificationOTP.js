@@ -24,21 +24,6 @@ const sendVerificationOTP = async (email) => {
     }
 }
 
-// const verifyUserEmail = async (otp, email) => {
-//     try{
-//         const validOTP = await verifyOtp(otp, email)
-//         if(!validOTP) {
-//             throw Error("Invalid OTP.")
-//         }
-
-//         await deleteOTP(email)
-//         return;
-//     } catch (error) {
-//         console.log(error)
-//         throw error
-//     }
-// }
-
 module.exports = {
      sendVerificationOTP, 
     //  verifyUserEmail 

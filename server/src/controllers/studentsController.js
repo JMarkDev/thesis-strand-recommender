@@ -72,17 +72,6 @@ const searchStudent = async (req, res) => {
     }
 }   
 
-// const getRecommended = async (req, res) => {
-//     const { title } = req.params;
-//     try {
-//         const recommendedResult = await studentModel.getRecommended(title);
-//         res.json(recommendedResult);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ status: "error", message: error.message });
-//     }
-// }
-
 const updateRecommended = async (req, res) => {
     const { id } = req.params;
     const { recommended } = req.body;

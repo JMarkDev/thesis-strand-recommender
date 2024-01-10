@@ -4,8 +4,7 @@ import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import sendEmail from '../../assets/images/send-email.jpg'
 import api from '../../api/api';
 import Loading from "../../components/loading/otpLoader/otpLoader";
-function AdminOTP({username}) {
-    console.log(username)
+function AdminOTP({ username }) {
   const [countDown, setCountDown] = useState(0);
   const [successMessage, setSuccessMessage] = useState('');
   const [otpError, setOtpError] = useState('');
@@ -120,7 +119,7 @@ function AdminOTP({username}) {
    {
   successMessage &&
   <div
-    className="absolute flex w-full mx-auto rounded-lg bg-green-100 px-6 py-5 text-base text-green-500 justify-center items-center"
+    className="absolute right-0 flex w-[70%] mx-auto rounded-lg bg-green-100 px-6 py-5 text-base text-green-500 justify-center items-center"
     role="alert"
   >
     <span className="flex-1 mr-3">{successMessage}</span>
@@ -141,13 +140,13 @@ function AdminOTP({username}) {
 }
 
 
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center">
       {loader && 
-      <div className="absolute flex items-center justify-center h-screen">
+      <div className="absolute flex items-center justify-center">
         <Loading />
       </div>
       }
-      <div className="w-[350px] sm:mx-auto sm:w-full sm:max-w-md px-4 py-4 mt-6 overflow-hidden bg-white p-4 rounded-lg shadow-md">
+      <div className="w-[350px] sm:mx-auto sm:w-full sm:max-w-md px-4 py-4 mt-6 overflow-hidden bg-gray-200 p-4 rounded-lg shadow-lg">
         <div className='flex'>
         <Link to="/admin" className="flex items-center gap-2 mb-4">
           <MdOutlineKeyboardBackspace className='text-2xl'/>

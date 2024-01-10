@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import axios from "axios"
 import { TbArrowBackUp } from "react-icons/tb";
 import api from "../../api/api";
+import AdminPassword from "../Authentication/AdminPassword";
+import UpdateUsername from "../../components/UpdateUsername"
 
 function Edit_admin() {
+    const [changeUsername, setChangeUsername] = useState(false);
+    const [adminPassword, setAdminPassword] = useState(true);
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [passwordConfirmation, setPasswordConfirmation] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [gender, setGender] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+    const [confirmPasswordError, setConfirmPasswordError] = useState("");
+    const navigate = useNavigate();
 
-    const navigate = useNavigate()
     let {id} = useParams()
 
     useEffect(() => {
@@ -32,39 +37,83 @@ function Edit_admin() {
 
     const handleSubmit = async function (e) {
         e.preventDefault();
-        if (password !== passwordConfirmation) {
-            alert("Password and password confirmation do not match");
-            return;
-          }
+
+        setPasswordError("");
+        setConfirmPasswordError("");
 
         const updateDetais = {
             name: name,
             username: username,
             password: password,
+            confirmPassword: confirmPassword,
             gender: gender,
             role: "admin"
         }
 
         try{
-            await api.put(`/admin/update/${id}`, updateDetais);
+            const response = await api.put(`/admin/update/${id}`, updateDetais);
+            alert(response.data.message)
             navigate('/admin')
         }
         catch(error){
-          console.error("Error updating admin", error);
-          if (error.response) {
-            // Handle server errors, including the case where the username already exists
-            if (error.response.status === 400 && error.response.data.Error === "Username already exists") {
-              alert("Username already exists. Please choose a different username.");
-            } else {
-              alert("An error occurred during admin update.");
-            }
-          } else {
-            alert("An error occurred during admin update.");
+          console.log(error.response)
+          if (error.response && error.response.data.errors) {
+            error.response.data.errors.forEach((error) => {
+              switch (error.path) {
+                case 'password':
+                  setPasswordError(error.msg);
+                  break;
+                case 'confirmPassword':
+                  setConfirmPasswordError(error.msg);
+                  break;
+                default:
+                  // Handle other errors as needed
+                  break;
+              }
+            });
           }
         }
     }
+
+    const handleVerifyPassword = async (password) => {
+
+      try {
+        const values = {
+          username: username,
+          password: password,
+        }
+        
+        const response = await api.post('/login', values, {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        });
+
+        console.log(response.data)
+        if (response.data.status === 'success') {
+          setAdminPassword(false)
+        }
+
+      } catch (error) {
+          console.log(error)
+          throw error
+      }
+    }
+
+    const handleChangeUsername = () => {
+      setChangeUsername(true)
+      setAdminPassword(false)
+    }
+
   return (
-    <div>
+    <>
+    { changeUsername && <UpdateUsername /> }
+
+    { !changeUsername && (
+      <div>
+        {adminPassword ? (
+          <AdminPassword handleVerifyPassword={handleVerifyPassword} /> 
+        ): (
+          <div>
       <Link to={'/admin'} className="py-2 rounded-lg bg-gray-700 text-white flex items-center justify-center w-20 text-center"><TbArrowBackUp />Back</Link>
       <div className="w-full m-auto px-6 py-4 mt-6 overflow-hidden  bg-gray-200 dark:bg-gray-700 shadow-md sm:max-w-lg sm:rounded-lg">
         <form onSubmit={handleSubmit}>
@@ -118,20 +167,27 @@ function Edit_admin() {
             </div>
           </div>
           <div className="mt-4">
+            <div className="flex">
             <label
               htmlFor="email"
               className="block text-sm font-medium text-gray-700 undefined dark:text-white"
             >
               Email
             </label>
+            <span className="text-sm text-[#9E9E9E] mx-2">|</span>
+            <button 
+              className="text-sm text-[#1A9CB7]"
+              onClick={handleChangeUsername}
+              >
+              Change
+            </button>
+            </div>
             <div className="flex flex-col items-start">
-              <input
-                type="email"
-                name="email"
-                value={username} 
+              <p className="text-gray-900 dark:text-white py-2">{username}</p>
+                {/* value={username} 
                 onChange={e => setUsername(e.target.value)} // Update values.username
                 className="block w-full rounded-md py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
+              /> */}
             </div>
           </div>
          
@@ -149,13 +205,16 @@ function Edit_admin() {
                 name="password"
                 // value={password}
                 onChange={e => setPassword(e.target.value )}
-                className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={`block w-full rounded-md border py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                  passwordError  ? 'border-red-600' : '' // Apply border-red-600 class when there's an error
+                }`}
               />
             </div>
+            {passwordError && <div className="text-red-600 text-sm">{passwordError}</div>} 
           </div>
           <div className="mt-4">
             <label
-              htmlFor="password_confirmation"
+              htmlFor="confirmPassword"
               className="block text-sm font-medium text-gray-700 undefined dark:text-white"
             >
               Confirm Password
@@ -163,13 +222,16 @@ function Edit_admin() {
             <div className="flex flex-col items-start">
               <input
                 type="password"
-                name="password_confirmation"
+                name="confirmPassword"
                 placeholder="Confirm Password"
                 // value={passwordConfirmation}
-                onChange={e => setPasswordConfirmation(e.target.value)}
-                className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                onChange={e => setConfirmPassword(e.target.value)}
+                className={`block w-full rounded-md border py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                  confirmPasswordError  ? 'border-red-600' : '' // Apply border-red-600 class when there's an error
+                }`}
               />
             </div>
+            {confirmPasswordError && <div className="text-red-600 text-sm">{confirmPasswordError}</div>} 
           </div>
           <div className="flex items-center mt-4">
             <button
@@ -181,7 +243,11 @@ function Edit_admin() {
           </div>
         </form>
         </div>
-    </div>
+        </div>
+        )}
+      </div>
+    )}  
+    </>  
   )
 }
 

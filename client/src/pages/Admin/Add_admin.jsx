@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { TbArrowBackUp } from "react-icons/tb";
 import api from "../../api/api";
 import AdminOTP from "../Authentication/AdminOTP";
 import Loading from "../.././components/loading/otpLoader/otpLoader";
 
 function Add_admin() {
-    const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [registrationStatus, setRegistrationStatus] = useState(null);
   const [nameError, setNameError] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -16,7 +14,6 @@ function Add_admin() {
   const [displayOTP, setDisplayOTP] = useState(false);
   const [loader, setLoader] = useState(false);
 
-  const navigate = useNavigate();
   const [values, setValues] = useState({
     name: "",
     username: "", 
@@ -47,13 +44,6 @@ function Add_admin() {
         setLoader(false);
       }
     
-      // if (response.data.status === "success") {
-      //   setRegistrationStatus("success");
-      //   alert("Added Successfully");
-      //   navigate('/admin');
-      // } else {
-      //   setRegistrationStatus("error");
-      // }
     } catch (error) {
       setLoader(false);
 
@@ -102,7 +92,10 @@ function Add_admin() {
         }
         
         {
-          displayOTP ? <AdminOTP username={values.username}/> 
+          displayOTP ? 
+          <div className="mt-[-50px]">
+              <AdminOTP username={values.username}/> 
+          </div>
           : 
        
         <div className="w-full m-auto px-6 py-4 overflow-hidden border border-black dark:border-white shadow-md sm:max-w-lg sm:rounded-lg  bg-gray-200 dark:bg-gray-700">

@@ -27,7 +27,7 @@ const Dashboard = () => {
         '#00a8cc'
     ]
     const [strand, setStrand] = useState([]);
-    const [selectedYear, setSelectedYear] = useState(2023);
+    const [selectedYear, setSelectedYear] = useState(2024);
     const [data, setData] = useState([]);
 
     useEffect(() => {

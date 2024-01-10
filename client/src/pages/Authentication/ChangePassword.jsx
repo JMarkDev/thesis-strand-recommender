@@ -31,35 +31,13 @@ function ChangePassword() {
 
   return (
     <>
-    {/* {
-      successMessage &&
-      <div
-        className="absolute flex w-full mx-auto rounded-lg bg-green-100 px-6 py-5 text-base text-green-500 justify-center items-center"
-        role="alert"
-      >
-        <span className="flex-1 mr-3">{successMessage}</span>
-        <svg
-          className="w-5 h-5 fill-current text-green-500"
-          role="button"
-          viewBox="0 0 20 20"
-          onClick={() => setSuccessMessage(false)}
-        >
-          <title>Close</title>
-          <path
-            fillRule="evenodd"
-            d="M10.293 8l3.646-3.646a.5.5 0 11.708.708L11.707 8l3.647 3.646a.5.5 0 01-.708.708L10 8.707l-3.646 3.647a.5.5 0 01-.708-.708L9.293 8 5.646 4.354a.5.5 0 01.708-.708L10 7.293l3.646-3.647a.5.5 0 0 1 .708.708L10.707 8z"
-            clipRule="evenodd"
-          ></path>
-        </svg>
-      </div>
-    } */}
     <div className='flex items-center justify-center h-screen'>
     { loader && 
       <div className="absolute flex items-center justify-center h-screen">
         <Loading />
       </div>
     }
-      <div className="w-[350px] sm:mx-auto sm:w-full sm:max-w-md px-4 py-10 mt-6 overflow-hidden bg-white p-4 rounded-lg shadow-md">
+      <div className="w-[350px] sm:mx-auto sm:w-full sm:max-w-lg px-8 py-10 mt-6 overflow-hidden bg-white p-4 rounded-lg shadow-md">
         <div className='flex'>
         <Link to="/login" className="flex items-center gap-2 mb-4">
           <MdOutlineKeyboardBackspace className='text-2xl'/>

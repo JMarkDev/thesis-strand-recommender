@@ -61,7 +61,7 @@ function Grades() {
         Back
       </Link>
 
-      <div className=" max-w-md mx-auto p-4 bg-white border rounded-lg shadow-lg">
+      <div className="mt-[-50px] max-w-md mx-auto p-4 bg-white border rounded-lg shadow-lg">
         <div className='flex justify-between items-center'>
           <h2 className="text-2xl font-semibold mb-4">Grades Information</h2>
           <button

@@ -141,27 +141,29 @@ const deleteOTP = async (req, res) => {;
 
 const emailVerification = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { otp, email, role } = req.body;
         if(!email) throw Error("An email is required!");
 
-        const createdEmailVerificationOTP = await sendVerificationOTP(email);
-        res.status(200).json(createdEmailVerificationOTP);
+        // Delete existing OTP record
+        await otpModel.deleteOne(email)
+
+        const createdOTP = await sendVerificationOTP({
+            email,
+            subject: "Strand Recommender Verification Code",
+            message: "Verify your email with the code below.",
+            duration: 5,
+        });
+        
+        return res.status(200).json({
+            status: "success",
+            message: `Successfully resent OTP to ${email}`,
+            createdOTP
+        });
+
     } catch (error) {
         res.status(400).send(error.message)
     }
 }
-
-// const verifyUserEmail = async (req, res) => {
-//     try {
-//         const { email, otp } = req.body;
-//         if(!(email && otp)) throw Error("Email and OTP are required!");
-
-//         await 
-//         res.status(200).json({ message: "Email verified successfully." });
-//     } catch (error) {
-//         res.status(400).send(error.message)
-//     }
-// }
 
 
 module.exports = { 

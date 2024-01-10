@@ -2,6 +2,7 @@ const adminModel = require("../models/adminModel");
 const bcrypt = require('bcryptjs');
 const date = require('date-and-time');
 const saltRounds = 10;
+const otpModel = require('../models/otpModel');
 
 const getAllAdmin = async (req, res) => {
     try {
@@ -26,7 +27,7 @@ const getAdminById = async (req, res) => {
 
 const updateAdmin = async (req, res) => {
     const { id } = req.params;
-    const { name, username, password, role, gender } = req.body;
+    const { name, username, password, confirmPassword, role, gender } = req.body;
 
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -34,7 +35,7 @@ const updateAdmin = async (req, res) => {
         const formattedDate = date.format(updatedAt, 'YY/MM/DD HH:mm:ss');
 
         const result = await adminModel.updateAdmin(id, name, username, hashedPassword, role, gender, formattedDate);
-    
+        
         return res.status(200).json({ success: true, message: 'Admin updated successfully', result });
     } catch (error) {
         console.error(error);

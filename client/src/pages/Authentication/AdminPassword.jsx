@@ -12,8 +12,7 @@ function AdminPassword({ handleVerifyPassword }) {
 
     try {
        // Pass the password to the parent component for API call
-      const response = await handleVerifyPassword(password)
-      console.log(response)
+      await handleVerifyPassword(password)
     } catch (error) {
       setPasswordError(error.response.data.message)
     }

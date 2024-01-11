@@ -51,6 +51,7 @@ function Profile() {
 
         try {
             const response = await api.put(`/students/update/${id}`, updateDetais);
+            console.log(response.data)
             alert(response.data.message);
             setTimeout(() => {
                 setIsEditing(false);
@@ -73,19 +74,16 @@ function Profile() {
                         <div className='mt-0 mx-3 mb-5 flex flex-col justify-center items-center'>
                         </div>
                         <label className='block text-sm font-medium text-gray-700 dark:text-white'>Full Name*</label>
-                        <input type='text'
-                        disabled 
-                        value={name} 
-                        className='dark:text-white mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
-                        />
+                        <p className='dark:text-white mt-1 p-2 block w-full'>
+                            {name}
+                        </p>
                         </div>
                         <div className='mt-0 mx-3 mb-5'>
                         <label className='block text-sm font-medium text-gray-700 dark:text-white'>Email*</label>
-                        <input type='text' 
-                            value={username}  
-                            className='dark:text-white mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm '
-                            disabled
-                        /> 
+                        <p className='dark:text-white mt-1 p-2 block w-full text-black'>
+                            {username}
+                        </p>
+                           
                         </div>
                         <div className='mt-0 mx-3 mb-5'>
                             <label className='block text-sm font-medium text-gray-700 dark:text-white'>Gender*</label>
@@ -94,7 +92,7 @@ function Profile() {
                                 name="gender"
                                 value="male"
                                 checked={gender === "male"}
-                                onChange={handleGenderChange} 
+                                // onChange={handleGenderChange} 
                                 className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                             />
                             <label htmlFor="male" className="ml-2 dark:text-white">Male</label>
@@ -103,7 +101,7 @@ function Profile() {
                                 name="gender"
                                 value="female"
                                 checked={gender === "female"}
-                                onChange={handleGenderChange} 
+                                // onChange={handleGenderChange} 
                                 className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out ml-3"
                             />
                             <label htmlFor="female" className="ml-2 dark:text-white">Female</label>
@@ -146,12 +144,9 @@ function Profile() {
                             </div>
                             <div className='mt-0 mx-3 mb-5'>
                             <label className='block text-sm font-medium text-gray-700 dark:text-white'>Email*</label>
-                            <input type='text' 
-                                name='username'
-                                value={username}  
-                                className='mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm '
-                                onChange={(e) => setUsername(e.target.value)}    
-                            />
+                            <p className='mt-1 p-2 block w-full focus:outline-none'>
+                                {username} 
+                            </p> 
                             </div>
                             <div className='mt-0 mx-3 mb-5'>
                                 <label className='block text-sm font-medium text-gray-700 dark:text-white'>Gender*</label>

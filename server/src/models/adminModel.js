@@ -64,10 +64,21 @@ const searchAdminQuery = async (name) => {
     }
 }
 
+const updateUsername = async (id, username, formattedDate) => {
+    try {
+        const result = await executeQuery('UPDATE admin SET username =?, updatedAt =? WHERE id =?', [username, formattedDate, id]);
+        return result;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 module.exports = {
     getAllAdmin,
     getAdminById,
     updateAdmin,
     deleteAdmin,
-    searchAdminQuery
+    searchAdminQuery,
+    updateUsername
 };

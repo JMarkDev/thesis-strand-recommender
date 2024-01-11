@@ -97,6 +97,23 @@ const passwordValidationRules = () => {
   ];
 }
 
+const updateUsernameValidationRules = () => {
+  return [
+    body('username')
+      .custom((value, { req }) => {
+        if (!value) {
+          throw new Error('Username is required');
+        }
+
+        if (!value.match(emailRegex)) {
+          throw new Error('Enter a valid email address (e.g. sample@example.com).');
+        }
+
+        return true;
+      }),
+  ]
+}
+
 const validateForm = (req, res, next) => {
   const errors = validationResult(req);
 
@@ -111,5 +128,6 @@ module.exports = {
   loginValidationRules,
   validateForm,
   registerValidationRules,
-  passwordValidationRules
+  passwordValidationRules,
+  updateUsernameValidationRules
 };

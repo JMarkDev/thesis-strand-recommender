@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useParams, Link } from 'react-router-dom';
 import api from '../../../api/api';
+import UpdateUsername from './UpdateUsername' 
 
 function Profile() {
+    const [updateUsername, setUpdateUsername] = useState(false)
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -61,62 +62,85 @@ function Profile() {
             console.log(err);
         }
     }
+
+    const handleUpdateUsername = () => {
+        setUpdateUsername(false);
+    };
     
 
     return (
-        <div className='bg-gradient-to-b from-cyan-600 to-transparent  dark:bg-black h-[650px]'>
+        <>
+        { updateUsername ? (
+            <div className='h-[100vh]'>
+                <UpdateUsername handleUpdateUsername={handleUpdateUsername} />               
+            </div>
+        ) : (
+            <div className='bg-gradient-to-b from-cyan-600 to-transparent  dark:bg-black h-[650px]'>
         <div className='flex justify-center items-center '>
-            <div className='bg-white dark:bg-[#273242] mt-10 rounded shadow-md p-10 md:w-[550px]  lg:w-[550px]'>
+            <div className='bg-gray-200 dark:bg-[#273242] mt-10 rounded shadow-md p-10 md:w-[550px]  lg:w-[550px]'>
                 <h1 className='text-3xl font-bold text-center mb-4 dark:text-white'>Profile</h1>
                 <div className=''>
-                        <form>
-                        <div className='mt-0 mx-3 mb-5'>
-                        <div className='mt-0 mx-3 mb-5 flex flex-col justify-center items-center'>
+                        <div className='mb-4'>
+                            <label className='block text-sm font-medium text-gray-700 dark:text-white'>Full Name</label>
+                            <p className='dark:text-white mt-1 p-2 block w-full border border-gray-300 dark:border-gray-600 rounded-md'>
+                                {name}
+                            </p>
                         </div>
-                        <label className='block text-sm font-medium text-gray-700 dark:text-white'>Full Name*</label>
-                        <p className='dark:text-white mt-1 p-2 block w-full'>
-                            {name}
-                        </p>
-                        </div>
-                        <div className='mt-0 mx-3 mb-5'>
-                        <label className='block text-sm font-medium text-gray-700 dark:text-white'>Email*</label>
-                        <p className='dark:text-white mt-1 p-2 block w-full text-black'>
-                            {username}
-                        </p>
-                           
-                        </div>
-                        <div className='mt-0 mx-3 mb-5'>
-                            <label className='block text-sm font-medium text-gray-700 dark:text-white'>Gender*</label>
-                            <input
-                                type="radio"
-                                name="gender"
-                                value="male"
-                                checked={gender === "male"}
-                                // onChange={handleGenderChange} 
-                                className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-                            />
-                            <label htmlFor="male" className="ml-2 dark:text-white">Male</label>
-                            <input
-                                type="radio"
-                                name="gender"
-                                value="female"
-                                checked={gender === "female"}
-                                // onChange={handleGenderChange} 
-                                className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out ml-3"
-                            />
-                            <label htmlFor="female" className="ml-2 dark:text-white">Female</label>
-                        </div>
-                        <div className='mt-0 mx-3 mb-5'>
-                        <label className='block text-sm font-medium text-gray-700 dark:text-white'>Recommended Strand:</label>
-                        {
-                            recommended ? <p className='text-sm text-gray-500 dark:text-white'>{recommended}</p> : 
+                        
+                        <div className='mb-4'>
                             <div className='flex'>
-                            <p className='text-red-700 text-sm dark:text-white'>You have not taken the recommendation yet</p> 
-                            <Link className='text-blue-700 ml-2 dark:text-white' to='/input'>Click here</Link> 
+                                <label className='block text-sm font-medium text-gray-700 dark:text-white'>Email</label>
+                                <span className="text-sm text-[#9E9E9E] mx-2">|</span>
+                                <button 
+                                    type="button" 
+                                    className="text-sm text-[#1A9CB7]"
+                                    onClick={() => setUpdateUsername(true)}
+                                >
+                                    Change
+                                </button>
                             </div>
-                        }
+                            <p className='dark:text-white mt-1 p-2 block w-full border border-gray-300 dark:border-gray-600 rounded-md text-black'>
+                                {username}
+                            </p>
                         </div>
-                        </form>
+
+                            <div className='mb-4'>
+                                <label className='block text-sm font-medium text-gray-700 dark:text-white'>Gender</label>
+                                <div className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value="male"
+                                        checked={gender === "male"}
+                                        onChange={() => setGender("male")} // Assuming you have a state and a setter function
+                                        className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out accent-blue-600"
+                                    />
+                                    <label htmlFor="male" className="ml-2 dark:text-white">Male</label>
+
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value="female"
+                                        checked={gender === "female"}
+                                        onChange={() => setGender("female")} // Assuming you have a state and a setter function
+                                        className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out ml-3  accent-blue-600"
+                                    />
+                                    <label htmlFor="female" className="ml-2 dark:text-white">Female</label>
+                                </div>
+                            </div>
+
+
+                        <div className='mb-4'>
+                            <label className='block text-sm font-medium text-gray-700 dark:text-white'>Recommended Strand:</label>
+                            {recommended ? (
+                                <p className='text-sm text-gray-500 dark:text-white'>{recommended}</p>
+                            ) : (
+                                <div className='flex items-center'>
+                                    <p className='text-red-700 text-sm dark:text-white'>You have not taken the recommendation yet</p>
+                                    <Link className='text-blue-700 ml-2 dark:text-white' to='/input'>Click here</Link>
+                                </div>
+                            )}
+                        </div>
                         
                 </div>
                 <button
@@ -156,7 +180,7 @@ function Profile() {
                                 value="male"
                                 checked={gender === "male"}
                                 onChange={handleGenderChange}
-                                className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                                className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out  accent-blue-600"
                             />
                             <label htmlFor="male" className="ml-2 dark:text-white">Male</label>
                             <input
@@ -165,7 +189,7 @@ function Profile() {
                                 value="female"
                                 checked={gender === "female"}
                                 onChange={handleGenderChange}
-                                className="form-radio h-4 w-4 text-indigo-600  transition duration-150 ease-in-out ml-3"
+                                className="form-radio h-4 w-4 text-indigo-600  transition duration-150 ease-in-out ml-3  accent-blue-600"
                             />
                             <label htmlFor="female" className="ml-2 dark:text-white">Female</label>
                             </div>
@@ -214,6 +238,10 @@ function Profile() {
                 </div>
             </div>
         </div>
+        )}
+        
+            
+        </>
     );
 }
 

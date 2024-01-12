@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../../api/api';
 
 const Recommendation = () => {
   const [recommendedStrand, setRecommendedStrand] = useState(''); 
+  const [strandRanking, setStrandRanking] = useState([]);
   const [userId, setUserId] = useState('');
   const [isWhyModalOpen, setIsWhyModalOpen] = useState(false);
-  const [strandId, setStrandId] = useState('');
-  const [strandData, setStrandData] = useState([]);
-  const [strand, setStrand] = useState('');
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
@@ -18,58 +16,31 @@ const Recommendation = () => {
   }, []);
 
   
-  
-  
   useEffect(() => {
-    if (userId) {
-      axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/students/${userId}`)
-        .then((res) => {
-          const recommendedStrand = res.data[0].recommended;
-          setRecommendedStrand(recommendedStrand);
-          const strand = res.data[0].strand;
-          setStrand(strand);
-          // Fetch strands after setting the strand state
-          axios.get('http://backend.api.senior-high-school-strand-recommender.pro/strand/fetch')
-            .then((res) => {
-              const matchStrand = res.data.find((strandItem) => strandItem.name === recommendedStrand);
-              if (matchStrand) {
-                setStrandId(matchStrand.id);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    const getRecommendedStrand = async () => {
+      try {
+        const response = await api.get(`/students/${userId}`);
+        setRecommendedStrand(response.data[0].recommended);
+
+      } catch (err) {
+        console.error(err);
+      }
     }
-  }, [userId]);
+    getRecommendedStrand();
+  }, [userId])
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
   
-    axios.get(`http://backend.api.senior-high-school-strand-recommender.pro/rank/${userId}`)
+    api.get(`/ranking/${userId}`)
     .then((res) => {
-      const ranking = res.data[0].strandRanking;
-  
-      if (ranking) {
-        const strandData = JSON.parse(ranking).map(({ strand, reason }) => ({ strand, reason }));
-        setStrandData(strandData);
-        console.log(strandData);
-      } else {
-        console.log('No ranking data found in the response');
-      }
+      setStrandRanking(res.data[0].strandRanking);
     })
     .catch((err) => {
       console.error(err);
     });
   
   }, []);
-
-
-
-
 
   const openWhyModal = () => {
     setIsWhyModalOpen(true);
@@ -99,7 +70,7 @@ const Recommendation = () => {
         <span onClick={openWhyModal}>View Strand Ranking Result</span>
       </p>
   
-      <Link to={`/strand/${strandId}`} className="bg-blue-600 text-white py-2 px-4 rounded-full hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400">
+      <Link to={`/strand/${recommendedStrand}`} className="bg-blue-600 text-white py-2 px-4 rounded-full hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400">
       About <span className=''>{recommendedStrand}</span>
     </Link>
         
@@ -117,11 +88,11 @@ const Recommendation = () => {
         <h1 className='font-bold text-xl text-center mb-3'>Reasons:</h1>
         <ul className="list-none text-xl mb-4 text-gray-700 dark:text-gray-300">
       
-        {strandData.map((data, index) => (
+        {strandRanking.map((data, index) => (
           <li key={index} className="mb-4 flex items-center">
               <p className='font-bold mr-1 text-black  '>Top</p>
             <span className="text-xl text-black  mr-3">{index + 1}-</span>
-            <span className="text-xl text-black " >{`${data.strand}: "${data.reason}"`}</span>
+            <span className="text-xl text-black " >{`${data.name}: "${data.reasons}"`}</span>
           </li>
         ))}
       </ul>

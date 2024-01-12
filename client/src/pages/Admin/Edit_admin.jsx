@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { TbArrowBackUp } from "react-icons/tb";
 import api from "../../api/api";
 import AdminPassword from "../Authentication/AdminPassword";
-import UpdateUsername from "../../components/UpdateUsername"
+import UpdateUsername from "./UpdateUsername"
 
 function Edit_admin() {
     const [changeUsername, setChangeUsername] = useState(false);

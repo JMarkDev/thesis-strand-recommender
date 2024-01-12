@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { TbArrowBackUp } from 'react-icons/tb'
-import api from '../api/api'
-import Loading from './loading/otpLoader/otpLoader'
+import api from '../.././api/api'
+import Loading from '../../components/loading/otpLoader/otpLoader'
 
 function UpdateUsername() {
   const [username, setUsername] = useState('')
@@ -44,7 +44,8 @@ function UpdateUsername() {
     const values = {
       id: id,
       username: username,
-      otp: otp
+      otp: otp,
+      role: 'admin'
     }
 
     setLoader(true)

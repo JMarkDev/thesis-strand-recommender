@@ -95,6 +95,15 @@ const filterRecommended = async (recommended) => {
     }
 };
 
+const updateUsername = async (id, username, formattedDate, role) => {
+    try {
+        const result = await executeQuery(`UPDATE ${role} SET username =?, updatedAt =? WHERE id =?`, [username, formattedDate, id]);
+        return result;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 
 module.exports = {
     getAllStudents,
@@ -105,5 +114,6 @@ module.exports = {
     // getRecommended,
     updateRecommended,
     getAllRecommended,
-    filterRecommended
+    filterRecommended,
+    updateUsername
 };

@@ -64,9 +64,9 @@ const searchAdminQuery = async (name) => {
     }
 }
 
-const updateUsername = async (id, username, formattedDate) => {
+const updateUsername = async (id, username, formattedDate, role) => {
     try {
-        const result = await executeQuery('UPDATE admin SET username =?, updatedAt =? WHERE id =?', [username, formattedDate, id]);
+        const result = await executeQuery(`UPDATE ${role} SET username =?, updatedAt =? WHERE id =?`, [username, formattedDate, id]);
         return result;
     } catch (error) {
         console.error(error);

@@ -61,6 +61,23 @@ const recommendStrand = async (studentId) => {
             return allSubjectsMeetConditions;
         };
 
+                 // get the recommended strand
+            let recommendedStrandData = ''
+
+            const getRecommendedStrand = async () => {
+            const studentStrand = getGradesById[0].strand
+            if (checkAverageConditions() || checkSubjectConditions(studentStrand)) {
+                recommendedStrandData = studentStrand;
+            } else {
+                recommendedStrandData = getFirstStrand;
+            }
+        
+                // update the recommended strand in student data 
+                const updateRecommended = await studentModel.updateRecommended(studentId, recommendedStrandData);
+                console.log(recommendedStrandData)
+                return updateRecommended;
+            }
+
             // check if the average meet the conditions
         const checkAllAverageConditions = (strandName) => {
             const meetAllAverage = getAllRecommendationConditions.find((strand) => {
@@ -144,6 +161,7 @@ const recommendStrand = async (studentId) => {
                 return conditionsOrder[strandA.condition] - conditionsOrder[strandB.condition];
             });
 
+            console.log(strandRanking)
             return strandRanking;
         }
 
@@ -158,23 +176,7 @@ const recommendStrand = async (studentId) => {
         // get the first strand in the ranking
         const getFirstStrand = strandRankingArray[0].name;
 
-         // get the recommended strand
-         let recommendedStrandData = ''
-
-         const getRecommendedStrand = async () => {
-            const studentStrand = getGradesById[0].strand
-            if (checkAverageConditions() || checkSubjectConditions(studentStrand)) {
-                recommendedStrandData = studentStrand;
-            } else {
-                recommendedStrandData = getFirstStrand;
-            }
-
-            // update the recommended strand in student data 
-            const updateRecommended = await studentModel.updateRecommended(studentId, recommendedStrandData);
-            return updateRecommended;
-        }
-
-        getRecommendedStrand();
+        getRecommendedStrand(getFirstStrand);
 
     } catch (error) {
         console.error(error);

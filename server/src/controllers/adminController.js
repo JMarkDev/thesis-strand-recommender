@@ -5,6 +5,7 @@ const saltRounds = 10;
 const otpModel = require('../models/otpModel');
 const otpController = require('../controllers/otpController');
 const userModel = require('../models/userModel');
+const studentModel = require('../models/studentModel')
 const { successRegistrationEmail } = require('../utils/successRegistrationEmail')
 
 const getAllAdmin = async (req, res) => {
@@ -112,7 +113,7 @@ const updateUsername = async (req, res) => {
 
 const VerifyOTP = async (req, res) => {
     const { id } = req.params;
-    const { username, otp } = req.body; 
+    const { username, otp, role } = req.body; 
 
     try {
         const createdAt = new Date();
@@ -138,7 +139,12 @@ const VerifyOTP = async (req, res) => {
                 // Delete OTP record
                 await otpModel.deleteOne(username);
 
-                const updateUsernameResult = await adminModel.updateUsername(id, username, formattedDate);
+                // Update username
+                if (role === 'admin') {
+                    await adminModel.updateUsername(id, username, formattedDate, role);
+                } else if (role === 'student') {
+                    await studentModel.updateUsername(id, username, formattedDate, role);
+                }
 
                 // send message to email 
                 await successRegistrationEmail({
@@ -150,7 +156,6 @@ const VerifyOTP = async (req, res) => {
                 return res.status(200).json({
                     status: "success",
                     message: `Successfully verified ${username}.`,
-                    updateUsernameResult
                 });
             } else {
                 return res.status(400).json({

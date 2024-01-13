@@ -8,6 +8,7 @@ import { FaUserShield } from 'react-icons/fa';
 import { IoMdArrowDropright } from 'react-icons/io'; 
 import { ThemeContext } from "./ThemeContext";
 import logo from "../../src/assets/images/FLL.png";
+import logo_small from "../../src/assets/images/strand_recom_logo.png"
 import HamburgerButton from './HamburgerMenuButton/HamburgerButton';
 import { BsFillJournalBookmarkFill } from 'react-icons/bs';
 
@@ -49,7 +50,13 @@ const Sidebar = () => {
           onClick={() => setOpen(!open)}
         />
          <div className=" lg:flex justify-center items-center gap-3">
-        <img src={logo} alt="logo" className={`hidden sm:block md:block lg:block w-auto h-[30px] ${theme === 'dark' ? 'dark-mode-image' : ''}`} />
+          { 
+            open ? 
+            <img src={logo} alt="logo" className={`hidden sm:block md:block lg:block w-auto h-[30px] ${theme === 'dark' ? 'dark-mode-image' 
+            : ''}`} /> : 
+            <img src={logo_small} alt="logo" className={`hidden sm:block md:block lg:block w-auto h-[30px] ${theme === 'dark' ? 'dark-mode-image' : ''}`} />
+          }
+        
       </div>
         <Link to='/'>
           <div className={`flex ${open && 'gap-x-4'} items-center`}>

@@ -8,11 +8,14 @@ function Profile() {
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [passwordConfirmation, setPasswordConfirmation] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [gender, setGender] = useState("");
     const [recommended, setRecommended] = useState('');
     const { id } = useParams();
     const [isEditing, setIsEditing] = useState(false);
+    const [nameError, setNameError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -21,7 +24,7 @@ function Profile() {
                 setName(response.data[0].name)
                 setUsername(response.data[0].username)
                 setGender(response.data[0].gender)
-                setPassword(response.data[0].password)
+                // setPassword(response.data[0].password)
                 setRecommended(response.data[0].recommended)
             } catch (err) {
                 console.log(err);
@@ -37,15 +40,15 @@ function Profile() {
     const handleUpdate = async function (e) {
         e.preventDefault();
         
-    if (password !== passwordConfirmation) {
-        alert("Password and password confirmation do not match");
-        return;
-      }
+        setNameError('');
+        setPasswordError('');
+        setConfirmPasswordError('');
 
         const updateDetais = {
             name: name,
             username: username,
             password: password,
+            confirmPassword: confirmPassword,
             gender: gender,
             role: "student"
         }
@@ -59,7 +62,23 @@ function Profile() {
             }, 1000)
         } catch (err) {
             console.log(err.response);
-            console.log(err);
+            if(err.response.data.errors.length > 0) {
+                err.response.data.errors.forEach((error) => {
+                    switch (error.path) {
+                        case 'name': 
+                            setNameError(error.msg)
+                            break;
+                        case 'password':
+                            setPasswordError(error.msg)
+                            break;
+                        case 'confirmPassword':
+                            setConfirmPasswordError(error.msg)
+                            break;
+                        default:
+                        console.log(error.msg)
+                    }
+                })
+            }
         }
     }
 
@@ -154,18 +173,22 @@ function Profile() {
                     {isEditing && (
                         <div className='px-5 fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50'>
                             <div className='w-[550px]  bg-white dark:bg-[#273242] rounded-lg p-8'>
-                            <form onSubmit={handleUpdate} method="PUT" encType="multipart/form-data">
+                            <form onSubmit={handleUpdate} method="PUT">
                             <div className='mt-0 mx-3 mb-5'>
                             <div className='mt-0 mx-3 mb-5 flex flex-col justify-center items-center'>
                             </div>
                             <label className='block text-sm font-medium text-gray-700 dark:text-white'>Full Name*</label>
                             <input type='text'
                             name='name' 
-                            value={name} 
-                            className='mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
+                            value={name}
+                            className={`mt-1 p-2 block w-full border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm
+                                ${nameError ? 'border-red-600' : ''}
+                            `}
                             onChange={(e) => setName(e.target.value)}
                             />
+                             {nameError && <div className="text-red-600 text-sm">{nameError}</div>}
                             </div>
+                           
                             <div className='mt-0 mx-3 mb-5'>
                             <label className='block text-sm font-medium text-gray-700 dark:text-white'>Email*</label>
                             <p className='mt-1 p-2 block w-full focus:outline-none'>
@@ -200,22 +223,27 @@ function Profile() {
                             name="password"
                             placeholder='********'
                             // value={password} 
-                            className='mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
+                            className={`mt-1 p-2 block w-full border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm
+                            ${passwordError ? 'border-red-600' : ''}
+                            `}
                             onChange={(e) => setPassword(e.target.value)}
                             />
+                            {passwordError && <div className="text-red-600 text-sm">{passwordError}</div>}
                             </div>
                             <div className='mt-0 mx-3 mb-5'>
                             <label className='block text-sm font-medium text-gray-700 dark:text-white'>Confirm Password*</label>
                             <input
                                 type="password"
-                                name="password_confirmation"
+                                name="confirmPassword"
                                 placeholder='********'
-                                value={passwordConfirmation}
-                                onChange={(e) => setPasswordConfirmation(e.target.value)}
-                                className='mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ' 
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className={`mt-1 p-2 block w-full border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm
+                                ${confirmPasswordError ? 'border-red-600' : ''}
+                                `}
                             />
+                            {confirmPasswordError && <div className="text-red-600 text-sm">{confirmPasswordError}</div>}
                             </div>
-                            </form>
                             <div className='flex justify-end '>
                                     <button 
                                     onClick={() => setIsEditing(false)} 
@@ -229,9 +257,8 @@ function Profile() {
                                     >
                                     Save
                                 </button>
-                                </div>
-                                
-                               
+                            </div>
+                            </form>   
                             </div>
                         </div>
                     )}

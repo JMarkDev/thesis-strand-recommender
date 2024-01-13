@@ -105,11 +105,6 @@ function Login() {
                 <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                   Password
                 </label>
-                <div className="text-sm">
-                  <Link to="/change-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                    Forgot password?
-                  </Link>
-                </div>
               </div>
               <div className="mt-2">
               <input
@@ -122,13 +117,15 @@ function Login() {
                   passwordError || errorMessage ? 'border-red-600' : '' // Apply border-red-600 class when there's an error
                 }`}
               />
-
+              {passwordError && <div className="text-red-600 text-sm">{passwordError}</div>}
+              {errorMessage && <div className="text-red-600 text-sm">{errorMessage}</div>}
+              <div className="text-sm text-right mt-2">
+                  <Link to="/change-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                    Forgot password?
+                  </Link>
+                </div>
 
               </div>
-              {/* <div className="h-4"> Fixed height for error message container */}
-                {passwordError && <div className="text-red-600 text-sm">{passwordError}</div>}
-                {errorMessage && <div className="text-red-600 text-sm">{errorMessage}</div>}
-              {/* </div> */}
             </div>
 
             <div>

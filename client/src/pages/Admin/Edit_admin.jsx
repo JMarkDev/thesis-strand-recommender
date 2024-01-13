@@ -13,6 +13,7 @@ function Edit_admin() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [gender, setGender] = useState("");
+    const [nameError, setNameError] = useState("")
     const [passwordError, setPasswordError] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
     const navigate = useNavigate();
@@ -38,6 +39,7 @@ function Edit_admin() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        setNameError("");
         setPasswordError("");
         setConfirmPasswordError("");
         setChangeUsername(false);
@@ -61,6 +63,9 @@ function Edit_admin() {
           if (error.response && error.response.data.errors) {
             error.response.data.errors.forEach((error) => {
               switch (error.path) {
+                case 'name':
+                  setNameError(error.msg);
+                  break;
                 case 'password':
                   setPasswordError(error.msg);
                   break;
@@ -131,9 +136,12 @@ function Edit_admin() {
               name="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className={`block w-full rounded-md border py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                nameError  ? 'border-red-600' : '' // Apply border-red-600 class when there's an error
+              }`}
           />
           </div>
+          {nameError && <div className="text-red-600 text-sm">{nameError}</div>} 
         </div>
         <div className="mt-4">
           

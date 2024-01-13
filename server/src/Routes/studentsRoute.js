@@ -8,7 +8,6 @@ router.get('/:id', studentController.getStudentbyId)
 router.put('/update/:id', registerValidationRules(), validateForm, studentController.updateStudent)
 router.delete('/delete/:id', studentController.deleteStudent);
 router.get('/search/:name', studentController.searchStudent);
-// router.get('/recommended', studentController.getRecommended);
 router.put('/update-recommended/:id', studentController.updateRecommended);
 router.get('/all/recommended', studentController.getAllRecommendedStrand);
 router.get('/filter-recommended/:recommended', studentController.filterRecommended);

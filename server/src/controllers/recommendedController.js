@@ -161,7 +161,7 @@ const recommendStrand = async (studentId) => {
                 return conditionsOrder[strandA.condition] - conditionsOrder[strandB.condition];
             });
 
-            console.log(strandRanking)
+            console.log(strandRanking) 
             return strandRanking;
         }
 
@@ -176,6 +176,7 @@ const recommendStrand = async (studentId) => {
         // get the first strand in the ranking
         const getFirstStrand = strandRankingArray[0].name;
 
+        // run the function to get the recommended strand
         getRecommendedStrand(getFirstStrand);
 
     } catch (error) {

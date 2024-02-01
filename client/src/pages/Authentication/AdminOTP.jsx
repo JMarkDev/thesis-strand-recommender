@@ -4,7 +4,7 @@ import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import sendEmail from '../../assets/images/send-email.jpg'
 import api from '../../api/api';
 import Loading from "../../components/loading/otpLoader/otpLoader";
-function AdminOTP({ username }) {
+function AdminOTP({ username, password }) {
   const [countDown, setCountDown] = useState(0);
   const [successMessage, setSuccessMessage] = useState('');
   const [otpError, setOtpError] = useState('');
@@ -54,6 +54,7 @@ function AdminOTP({ username }) {
     try{
       const values = {
         email: username,
+        password: password,
         role: 'admin',
         otp: otpDigits.join(''), // Join the OTP digits into a single string
       }; 

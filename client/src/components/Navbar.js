@@ -5,8 +5,11 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import axios from "axios";
 import userImg from ".././assets/images/user.png";
 import api from "../api/api";
+import Cookies from "js-cookie";
+import ProtectedRoute from "../pages/ProtectedRoute";
 
 const Navbar = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [open, setOpen] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -42,9 +45,19 @@ const Navbar = () => {
     }
   };
 
-  const handleLogout = () => {
-    // Clear the token from localStorage and redirect to the login page
-    localStorage.removeItem("token");
+  const handleLogout = async () => {
+    // Clear the token from cookies and redirect to the login page
+    try {
+      const response = await api.post('/logout')
+      if (response.data.status === "Success") {
+        Cookies.remove("token");
+        Cookies.remove("role");
+        setIsLoggedIn(false);
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
     navigate("/");
   };
 

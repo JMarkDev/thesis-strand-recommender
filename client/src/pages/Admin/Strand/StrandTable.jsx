@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MdDelete } from 'react-icons/md';
 import { LiaEdit } from 'react-icons/lia';
-import axios from 'axios';
 import { Dialog, Transition } from "@headlessui/react";
-// import { GrView } from 'react-icons/gr';
 import { Fragment } from "react";
 import '../../../index.css'
 import api from '../../../api/api';

@@ -4,6 +4,8 @@ import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import sendEmail from '../../assets/images/send-email.jpg'
 import api from '../../api/api';
 import Loading from "../../components/loading/otpLoader/otpLoader";
+import Cookies from 'js-cookie';
+
 function OTP() {
   const [countDown, setCountDown] = useState(0);
   const [successMessage, setSuccessMessage] = useState('');
@@ -15,6 +17,7 @@ function OTP() {
   // Access the data
   const username = state ? state.username : '';
   const role = state ? state.role : '';
+  const password = state ? state.password : '';
 
   const [otpDigits, setOtpDigits] = useState(['', '', '', '']); // Initialize state for OTP digits
   const inputRefs = [useRef(), useRef(), useRef(), useRef()];
@@ -61,6 +64,7 @@ function OTP() {
         email: username,
         role: role,
         otp: otpDigits.join(''), // Join the OTP digits into a single string
+        password: password,
       }; 
       
       const response = await api.post('/otp/verify', values);
@@ -70,9 +74,8 @@ function OTP() {
         setSuccessMessage(response.data.message)
 
         // setSuccessMessage(response.data.message)
-  
-        localStorage.setItem('token', response.data.token); 
-        localStorage.setItem('role', response.data.role);
+        Cookies.set('token', response.data.token);
+        Cookies.set('role', response.data.role);
         localStorage.setItem('userId', response.data.userId);
 
         const userRole = localStorage.getItem('role');

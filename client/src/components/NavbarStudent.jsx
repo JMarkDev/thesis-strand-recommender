@@ -8,6 +8,7 @@ import sm_logo from "../../src/assets/images/FLL.png";
 import '.././index.css'
 import { ThemeContext } from "./ThemeContext";
 import api from "../api/api";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -23,7 +24,8 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
+    Cookies.remove("role");
     navigate("/Log-in");
   };
 

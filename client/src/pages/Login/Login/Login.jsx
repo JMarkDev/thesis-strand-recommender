@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import logo from '../../../assets/images/FLL.png';
 import api from '../../../api/api';
+import Cookies from 'js-cookie';
 function Login() {
   const [values, setValues] = useState({
     username: '',
@@ -13,6 +13,22 @@ function Login() {
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate(); 
+
+  // useEffect(() => {
+  //   const role = Cookies.get('role'); 
+
+  //   if (role) {
+  //     // Redirect to the dashboard if a token exists
+  //     // role : 'admin' ? navigate('/dashboard') : navigate
+  //     if(role === 'admin'){
+  //       navigate('/dashboard');
+  //     } else if(role === 'student'){
+  //       navigate('/Home');
+  //     }
+  //   } 
+
+  // }, [navigate]);
+  
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -29,13 +45,12 @@ function Login() {
       });
   
       if (response.data.status === 'success') {
-        localStorage.setItem('token', response.data.token); 
-        localStorage.setItem('role', response.data.role);
+        Cookies.set('token', response.data.token, { httpOnly: true }); 
+        Cookies.set('role', response.data.role, { expires: 1 });
         localStorage.setItem('userId', response.data.userId);
   
-        const userRole = localStorage.getItem('role');
+        const userRole = response.data.role;
         const dashboardURL = userRole === 'admin' ? '/dashboard' : '/Home';
-        
         navigate(dashboardURL)
       } else {
         setErrorMessage(response.data.message);

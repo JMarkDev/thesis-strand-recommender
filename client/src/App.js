@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-pascal-case */
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 // change to HashRouter if deployment 
 
 import Layout from './components/Layout';
@@ -34,17 +34,28 @@ import OTP from './pages/Authentication/RegistrationOTP';
 import ChangePassword from './pages/Authentication/ChangePassword';
 import ChangePasswordOTP from './pages/Authentication/ChangePasswordOTP';
 import ConfirmPassword from './pages/Authentication/ConfirmPassword';
+import Cookies from 'js-cookie';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-    setIsLoggedIn(token !== null);
-    setUserRole(role);
+    const fetchData = async () => {
+      const token = Cookies.get('token') !== null;
+      const role = Cookies.get('role');
+      setIsLoggedIn(token);
+      setUserRole(role);
+    };
+
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    if(userRole && isLoggedIn) {
+      setIsLoggedIn(true)
+    }
+  }, [setIsLoggedIn, userRole, isLoggedIn])
 
   return (
     <Router>
@@ -56,7 +67,7 @@ function App() {
         <Route path='/change-password-otp' element={ <ChangePasswordOTP />}/>
         <Route path='/confirm-password' element={ <ConfirmPassword /> }/>
 
-        <Route path="/log-in" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/log-in" element={ <Login setIsLoggedIn={setIsLoggedIn} />} />
 
         {/* Routes for admin */}
         <Route

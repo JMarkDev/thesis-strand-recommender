@@ -43,7 +43,7 @@ export default function Register() {
       console.log(response.data);
   
       if (response.data.status === "success") {
-        navigate("/verify", { state: { username: values.username, role: values.role } });
+        navigate("/verify", { state: { username: values.username, role: values.role, password: values.password } });
       } else {
         alert(response.data.message);
       }

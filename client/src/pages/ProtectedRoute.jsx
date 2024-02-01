@@ -1,14 +1,15 @@
 // In ProtectedRoute.js
 
+import Cookies from 'js-cookie';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ element, allowedRoles }) => {
   // Check if the user is logged in (you can use a token check)
-  const isLoggedIn = localStorage.getItem('token') !== null;
+  const isLoggedIn = Cookies.get('token') !== null;
 
-  // Get the user's role from local storage
-  const userRole = localStorage.getItem('role');
+  // Get the user's role from cookies storage
+  const userRole = Cookies.get('role');
 
   // Check if the user's role is allowed for this route
   const isRoleAllowed = allowedRoles.includes(userRole);

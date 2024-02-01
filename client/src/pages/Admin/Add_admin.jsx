@@ -94,7 +94,7 @@ function Add_admin() {
         {
           displayOTP ? 
           <div className="mt-[-50px]">
-              <AdminOTP username={values.username}/> 
+              <AdminOTP username={values.username} password={values.password}/> 
           </div>
           : 
        

@@ -24,7 +24,8 @@ const handleLogin = async (req, res) => {
                         status: "success", 
                         message: "Login Successful", 
                         role, 
-                        userId 
+                        userId,
+                        token 
                     });
                 } else {
                     return res.status(400).json({ status: "error", message: "Invalid password!" });

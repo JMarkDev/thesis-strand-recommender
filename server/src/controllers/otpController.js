@@ -23,7 +23,7 @@ const postOtp = async (username) => {
   };
 
 const verifyOtp = async (req, res) => {
-    const { otp, email, role } = req.body;
+    const { otp, email, role, password } = req.body;
 
     try {
         const userData = await userModel.getUserLogin(email);
@@ -61,14 +61,17 @@ const verifyOtp = async (req, res) => {
                     await successRegistrationEmail({
                         email: email, 
                         subject: "Strand Recommender Registration Successful", 
-                        message: "Thank you for registering. Your account has been successfully created."
+                        message: "Thank you for registering. Your account has been successfully created.",
+                        username: email,
+                        password: password
                     })
 
                     return res.status(200).json({ 
                         status: "success", 
                         message: "Registration successful", 
                         role,
-                        userId 
+                        userId, 
+                        token
                     });
                 } else {
                     return res.status(400).json({ 

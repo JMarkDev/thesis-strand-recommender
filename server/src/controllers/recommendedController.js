@@ -104,14 +104,14 @@ const recommendStrand = async (studentId) => {
 
                  // ranking reasons
             const strandRankingReasons = {
-                meetAllConditions: `Your grades qualify you for this strand , and it matches perfectly to course you’ve selected`,
-                meetAverageAndGrades: `Your grades qualify you for this strand , but your desired course is not related to ${strand.name}`,
-                meetAverageAndCourse: `Your grades are just a step away from qualifying for this strand , but the course you’ve selected is related to ${strand.name}`,
-                meetGradesAndCourse: `Your grades are just a step away from qualifying for this strand , but the course you’ve selected is related to ${strand.name}.`,
-                meetAverage: `Your grades are just a step away from qualifying for this strand , and the course you’ve selected is not related to ${strand.name}.`,
-                meetGrades: "Your grades are just a step away from qualifying for this strand , but it doesn’t match your desired course.",
-                meetCourse: `Your grades did not reach the set conditions for this strand, but your desired course is related to ${strand.name}.`,
-                notMeetConditions: `Your grades did not reach the set conditions for this strand, and the course you’ve selected is not related to ${strand.name}.`
+                meetAllConditions: `Your grades in every subject, along with the general average qualify you for this strand , and it matches perfectly to the course you’ve selected.`,
+                meetGradesAndCourse: `Your grades in every subject qualify you for this strand , and the course you’ve selected is related to ${strand.name}.`,
+                meetAverageAndCourse: `Your general average qualify you for this strand , and the course you’ve selected is related to ${strand.name}.`,
+                meetAverageAndGrades: `Your grades in every subject, along with the general average qualify you for this strand , but your desired course is not related to ${strand.name}.`,
+                meetGrades: `Only your grades in every subject qualified for this strand`,
+                meetAverage: `Only your general average qualified for this strand.`,                
+                meetCourse: `Your grades in every subject and general average did not reach the set requirements for this strand, but your desired course is related to ${strand.name}.`,
+                notMeetConditions: `Your input did not match any of this strand requirements.`
             };
 
                 let condition = '';
@@ -148,11 +148,11 @@ const recommendStrand = async (studentId) => {
             
             const conditionsOrder = {
                 'meet average, grades and course': 1, 
-                'meet average and grades': 2,
+                'meet grades and course': 2,
                 'meet average and course': 3,
-                'meet grades and course': 4,
-                'meet average': 5,
-                'meet grades': 6,
+                'meet average and grades': 4,
+                'meet grades': 5,
+                'meet average': 6,
                 'meet course': 7,
                 'not meet conditions': 8,
             };
@@ -161,7 +161,6 @@ const recommendStrand = async (studentId) => {
                 return conditionsOrder[strandA.condition] - conditionsOrder[strandB.condition];
             });
 
-            console.log(strandRanking) 
             return strandRanking;
         }
 
@@ -189,6 +188,4 @@ const recommendStrand = async (studentId) => {
 module.exports = {
     getStrandConditions,
     recommendStrand,
-    // updateRecommended
-    // getStrandRanking
 }

@@ -12,10 +12,7 @@ const successRegistrationEmail = async  ({ email, subject, message, username, pa
             from: AUTH_EMAIL,
             to: email,
             subject,
-            html: `<p style="font-size: 18px; color: #333; margin-bottom: 10px;">${message}</p>
-            <p style="font-size: 18px; color: #333; margin-bottom: 10px;">Username: ${username}</p>
-            <p style="font-size: 18px; color: #333; margin-bottom: 10px;">Password: ${password}</p>
-            `,
+            html: `<p style="font-size: 18px; color: #333; margin-bottom: 10px;">${message}</p>`,
         };
         
         await sendEmail(mailOptions);
@@ -24,8 +21,9 @@ const successRegistrationEmail = async  ({ email, subject, message, username, pa
             email: username,
             subject,
             message,
+            // username: username,
+            // password: password,
         };         
-
         return successRegister
     } catch (error) {
         throw error;

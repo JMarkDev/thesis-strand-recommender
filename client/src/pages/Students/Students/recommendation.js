@@ -63,7 +63,7 @@ const Recommendation = () => {
 
   
           <h1 className="text-3xl font-extrabold text-center text-blue-800 dark:text-black mb-6">
-          Based on your inputs, your recommended strand is <span className="text-blue-600">{recommendedStrand}</span>
+          Congratulations! Based on your inputs, your recommended strand is <span className="text-blue-600">{recommendedStrand}</span>
         </h1>
           
         <p className="mb-5 text-center underline text-black hover:opacity-70 font-bold text-lg cursor-pointer ">

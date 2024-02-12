@@ -50,7 +50,7 @@ function Login() {
         localStorage.setItem('userId', response.data.userId);
   
         const userRole = response.data.role;
-        const dashboardURL = userRole === 'admin' ? '/dashboard' : '/Home';
+        const dashboardURL = userRole === 'admin' ? '/dashboard' : '/home';
         navigate(dashboardURL)
       } else {
         setErrorMessage(response.data.message);

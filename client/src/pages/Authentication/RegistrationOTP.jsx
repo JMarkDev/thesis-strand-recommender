@@ -79,7 +79,7 @@ function OTP() {
         localStorage.setItem('userId', response.data.userId);
 
         const userRole = localStorage.getItem('role');
-        const dashboardURL = userRole === 'admin' ? '/dashboard' : '/Home';
+        const dashboardURL = userRole === 'admin' ? '/dashboard' : '/home';
 
         setTimeout(() => {
           navigate(dashboardURL);

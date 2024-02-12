@@ -38,6 +38,7 @@ const Input = () => {
     }
 
     const average = count > 0 ? sum / count : 0;
+    // const result = parseInt(average.toString().slice(0, 2))
     setAverage(average)
   }, [grades])
 

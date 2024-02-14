@@ -12,7 +12,10 @@ const successRegistrationEmail = async  ({ email, subject, message, username, pa
             from: AUTH_EMAIL,
             to: email,
             subject,
-            html: `<p style="font-size: 18px; color: #333; margin-bottom: 10px;">${message}</p>`,
+            html: `<p style="font-size: 18px; color: #333; margin-bottom: 10px;">${message}</p>
+                    <p style="font-size: 18px; color: #333; margin-bottom: 10px;">Username: ${email}</p>
+                    <p style="font-size: 18px; color: #333; margin-bottom: 10px;">Password: ${password}</p>
+                `,
         };
         
         await sendEmail(mailOptions);

@@ -68,7 +68,6 @@ function OTP() {
       }; 
       
       const response = await api.post('/otp/verify', values);
-      console.log(response.data)
       if(response.data.status === 'success'){
         setLoader(false);
         setSuccessMessage(response.data.message)
@@ -78,7 +77,7 @@ function OTP() {
         Cookies.set('role', response.data.role);
         localStorage.setItem('userId', response.data.userId);
 
-        const userRole = localStorage.getItem('role');
+        const userRole = response.data.role
         const dashboardURL = userRole === 'admin' ? '/dashboard' : '/home';
 
         setTimeout(() => {

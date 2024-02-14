@@ -261,7 +261,7 @@ export function Users() {
                   <div className="text-left md:table-cell" key={`${id}-strand`}>
 
                   {rankings[id] && rankings[id].length > 0 && (
-                    <button  className="p-2 text-blue-600 hover:text-blue-800 focus:outline-none"
+                    <button  className="p-2 text-blue-600 dark:text-white hover:text-blue-800 focus:outline-none"
                     onClick={() => openWhyModal()}>
                       View more
                     </button>
@@ -322,7 +322,7 @@ export function Users() {
                   
                       <Link
                         to={`/grades/${id}`}
-                        className="p-2 text-blue-600 hover:text-blue-800 focus:outline-none"
+                        className="p-2 text-blue-600 dark:text-white hover:text-blue-800 focus:outline-none"
                       >
                       View Inputs
                       </Link>

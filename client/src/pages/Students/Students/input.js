@@ -38,8 +38,8 @@ const Input = () => {
     }
 
     const average = count > 0 ? sum / count : 0;
-    // const result = parseInt(average.toString().slice(0, 2))
-    setAverage(average)
+    const result = Math.round(average * 100) / 100;
+    setAverage(result)
   }, [grades])
 
   const handleChange = (e) => {

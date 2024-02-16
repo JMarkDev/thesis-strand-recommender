@@ -1,8 +1,18 @@
 import React from 'react';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom'
 
 function PageNotFound() {
+  const role = Cookies.get('role');
+  const navigate = useNavigate();
   const goBack = () => {
-    window.history.back();
+    if(role === 'admin') {
+      navigate('/admin');
+    } else if(role === 'student') {
+      navigate('/home');
+    } else {
+      navigate('/log-in');
+    }
   };
 
   return (

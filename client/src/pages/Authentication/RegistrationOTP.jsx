@@ -62,7 +62,7 @@ function OTP() {
     try{
       const values = {
         email: username,
-        role: role,
+        role: 'student',
         otp: otpDigits.join(''), // Join the OTP digits into a single string
         password: password,
       }; 

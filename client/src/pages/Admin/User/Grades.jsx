@@ -61,9 +61,9 @@ function Grades() {
         Back
       </Link>
 
-      <div className="mt-[-50px] max-w-md mx-auto p-4 bg-white border rounded-lg shadow-lg">
+      <div className="mt-[-50px] max-w-md mx-auto p-4 bg-white dark:bg-gray-700 border rounded-lg shadow-lg">
         <div className='flex justify-between items-center'>
-          <h2 className="text-2xl font-semibold mb-4">Grades Information</h2>
+          <h2 className="text-2xl font-semibold mb-4 dark:text-white">Grades Information</h2>
           <button
             className='px-4 py-2 bg-blue-500 text-white rounded shadow-lg hover:bg-blue-700 focus:outline-none'
             onClick={downloadCSV}
@@ -72,20 +72,20 @@ function Grades() {
           </button>
         </div>
         <div className="mb-4">
-          <p className="font-bold text-lg">Course:</p>
-          <p className='font-bold'>{course}</p>
+          <p className="font-bold text-lg dark:text-white">Course:</p>
+          <p className='font-bold dark:text-white'>{course}</p>
         </div>
 
-        <table className="w-full bg-gray-100 border border-gray-300 rounded-md overflow-hidden">
+        <table className="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 rounded-md overflow-hidden">
           <thead className="bg-gray-200">
             <tr>
-              <th className="py-2 px-4 text-left">Subject</th>
-              <th className="py-2 px-4 ">Grade</th>
+              <th className="py-2 px-4 text-left dark:text-white dark:bg-gray-700">Subject</th>
+              <th className="py-2 px-4 dark:text-white dark:bg-gray-700">Grade</th>
             </tr>
           </thead>
           <tbody>
             {filteredGradeEntries.map(([key, value]) => (
-              <tr key={key} className="border-t border-gray-300 ">
+              <tr key={key} className="border-t border-gray-300 dark:text-white dark:bg-gray-700">
                 <td className="py-2 px-4 ">{capitalizeFirstLetter(key)}</td>
                 <td className="py-2 px-4 text-center">{value}</td>
               </tr>

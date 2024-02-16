@@ -14,20 +14,20 @@ function Login() {
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate(); 
 
-  // useEffect(() => {
-  //   const role = Cookies.get('role'); 
+  useEffect(() => {
+    const role = Cookies.get('role'); 
 
-  //   if (role) {
-  //     // Redirect to the dashboard if a token exists
-  //     // role : 'admin' ? navigate('/dashboard') : navigate
-  //     if(role === 'admin'){
-  //       navigate('/dashboard');
-  //     } else if(role === 'student'){
-  //       navigate('/Home');
-  //     }
-  //   } 
+    if (role) {
+      // Redirect to the dashboard if a token exists
+      // role : 'admin' ? navigate('/dashboard') : navigate
+      if(role === 'admin'){
+        navigate('/dashboard');
+      } else if(role === 'student'){
+        navigate('/home');
+      }
+    } 
 
-  // }, [navigate]);
+  }, [navigate]);
   
 
   const handleLogin = async (event) => {
@@ -83,7 +83,7 @@ function Login() {
       }}
     >
       <h2 className="text-center mb-5 text-3xl font-bold leading-9 tracking-tight text-gray-900">
-              Discover the right Senior High School Strand suites for you!
+              Discover the right Senior High School Strand suited for you!
             </h2>
 
         <div className="w-[350px] sm:mx-auto sm:w-full sm:max-w-md px-4 py-4 mt-6 overflow-hidden bg-gradient-to-r from-cyan-300 to-transparent p-4 rounded-lg shadow-md">

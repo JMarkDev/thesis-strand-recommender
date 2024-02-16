@@ -82,7 +82,7 @@ export default function LandingPage() {
           </div>
           <div className="text-center">
           <h1 className="text-lg md:text-2xl  font-bold tracking-tight text-gray-900 sm:text-lg">
-          Your journey to success begins with making the right choices. Navigate the path to your ideal senior high school strand with our specialized strand recommender. Together, let's uncover the possibilities and find the perfect fit for your aspirations
+          Start your journey to success by making the right choices. Use our specialized strand recommender to find the perfect senior high school strand for you. Let's uncover the possibilities together and find the ideal fit for your aspirations.
             </h1>
             <p className=" text-lg leading-8 text-gray-600 mt-3">
             Your future is waiting. Let's find your path together!

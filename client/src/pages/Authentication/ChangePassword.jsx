@@ -39,7 +39,7 @@ function ChangePassword() {
     }
       <div className="w-[350px] sm:mx-auto sm:w-full sm:max-w-lg px-8 py-10 mt-6 overflow-hidden bg-white p-4 rounded-lg shadow-md">
         <div className='flex'>
-        <Link to="/login" className="flex items-center gap-2 mb-4">
+        <Link to="/log-in" className="flex items-center gap-2 mb-4">
           <MdOutlineKeyboardBackspace className='text-2xl'/>
         </Link>
         <h1 className="ml-5 text-2xl font-semibold mb-4">Forgot Password?</h1>

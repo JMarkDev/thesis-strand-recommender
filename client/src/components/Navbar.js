@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import Toggle from './ThemeToggle'
 import { FaUser } from "react-icons/fa"
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
-import axios from "axios";
 import userImg from ".././assets/images/user.png";
 import api from "../api/api";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -44,6 +44,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     // Clear the token from localStorage and redirect to the login page
+    Cookies.remove("role");
+    Cookies.remove('token')
     localStorage.removeItem("token");
     navigate("/");
   };

@@ -145,7 +145,7 @@ function EditStrand() {
         <TbArrowBackUp />
         Back
       </Link>
-      <div className="max-w-lg mx-auto p-4 border rounded-lg shadow-lg">
+      <div className="max-w-lg mx-auto p-4 border rounded-lg shadow-lg dark:bg-gray-700">
         <h2 className="text-2xl font-semibold text-center mt-4 dark:text-white ">Edit Strand</h2>
         <form onSubmit={handleUpdate} method="PUT" encType="multipart/form-data" className="mt-4">
           <div className="mb-4">

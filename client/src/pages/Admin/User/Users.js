@@ -116,7 +116,7 @@ export function Users() {
 
   return (
     <div className="py-5 px-2 min-h-screen w-auto">
-      <div className="flex flex-col md:flex-row items-center justify-between mb-4">
+      <div className="flex  items-center justify-between mb-4">
         <div className="flex space-x-2">
           <input
             type="text"

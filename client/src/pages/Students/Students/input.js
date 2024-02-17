@@ -355,7 +355,7 @@ border bg-gradient-to-b from-cyan-600 to-red-400  cursor-pointer dark:bg-black 
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="absolute z-10 mt-1 w-full -top-48">
+            <div className="z-10 mt-1 w-full absolute inset-0 px-4 -top-48">
               <Listbox.Options className="max-h-56 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {courseOption.map((course) => (
                   <Listbox.Option

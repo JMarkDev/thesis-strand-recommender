@@ -1,33 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Toggle from './ThemeToggle'
-import { FaUser } from "react-icons/fa"
-import { useNavigate, useLocation, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import userImg from ".././assets/images/user.png";
 import api from "../api/api";
 import Cookies from "js-cookie";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const [name, setName] = useState('');
-
-  const pageTitles = {
-    '/dashboard': 'Dashboard',
-    '/users': 'Users',
-    '/admin': 'Admin',
-    '/add-admin': 'Add Admin',
-    [`/update/${id}`]: 'Update Admin',
-    '/course-stem': 'STEM',
-    '/course-abm': 'ABM',
-    '/course-humss': 'HUMSS',
-    '/course-smaw': 'SMAW',
-    '/courses/add': 'Add Course',
-    '/courses': 'Courses',
-    [`/course/edit/${id}`]: 'Edit Course',
-    '/strand': 'Strand'
-  }
 
   const showProfile = (e) => {
     const isToggle = e.target.classList.contains('toggle-button');

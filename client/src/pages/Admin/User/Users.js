@@ -12,12 +12,14 @@ export function Users() {
   const [deleteUserId, setDeleteUserId] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [rankings, setRankings] = useState({});
-  const [isWhyModalOpen, setIsWhyModalOpen] = useState(false);
+  const [isWhyModalOpen, setIsWhyModalOpen] = useState('');
   const [strandData, setStrandData] = useState([]);
   const [name, setName] = useState('')
+  const [rankingId, setRankingId] = useState('')
 
-  const openWhyModal = () => {
-    setIsWhyModalOpen(true);
+  const openWhyModal = (id) => {
+    setIsWhyModalOpen(id);
+    setRankingId(id)
   };
 
   const closeWhyModal = () => {
@@ -45,13 +47,6 @@ export function Users() {
             ...prevRankings,
             [id]: strandRankingArray,
           }));
-
-          if (strandRankingArray.length > 0) {
-            const strandData = strandRankingArray.map(({ name, reasons }) => ({ name, reasons }));
-            setStrandData(strandData);
-          } else {
-            console.log('No ranking data found in the response');
-          }
         }
 
       } catch (err) {
@@ -66,6 +61,33 @@ export function Users() {
       handleRanking(id);
     });
   }, [userData]);
+
+  useEffect(() => {
+    const fetchRankingById = async () => {
+      try {
+        const response = await api.get(`/ranking/${rankingId}`)
+        if (response.data && response.data.length > 0 ) {
+          const strandRankingArray = response.data[0].strandRanking;
+          console.log(strandRankingArray)
+          setRankings((prevRankings) => ({
+            ...prevRankings,
+            [rankingId]: strandRankingArray,
+          }));
+
+          if (strandRankingArray.length > 0) {
+            const strandData = strandRankingArray.map(({ name, reasons }) => ({ name, reasons }));
+            setStrandData(strandData);
+          } else {
+            console.log('No ranking data found in the response');
+          }
+        }
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchRankingById()
+  }, [rankingId])
 
   
 
@@ -262,14 +284,14 @@ export function Users() {
 
                   {rankings[id] && rankings[id].length > 0 && (
                     <button  className="p-2 text-blue-600 dark:text-white hover:text-blue-800 focus:outline-none"
-                    onClick={() => openWhyModal()}>
+                    onClick={() => openWhyModal(id)}>
                       View more
                     </button>
                   )}
                                
                     <div
                 className={`fixed inset-0 flex items-center justify-center z-50 ${
-                  isWhyModalOpen ? 'block' : 'hidden'
+                  isWhyModalOpen === id ? 'block' : 'hidden'
                 }`}
                 
               >

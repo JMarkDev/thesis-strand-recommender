@@ -121,7 +121,7 @@ export default function Register() {
                     <input
                       type="text"
                       name="name"
-                      placeholder="Name"
+                      placeholder="Full Name"
                       value={values.name}
                       onChange={(e) =>
                         setValues({ ...values, name: e.target.value })
@@ -131,6 +131,7 @@ export default function Register() {
                       }`}
                     />
                   </div>
+                  <p className="text-sm">(Last Name, First Name, Middle Initial, Suffix)</p>
                   {/* <div className="h-4">  */}
                     {nameError && <div className="text-red-600 text-sm">{nameError}</div>}
                   {/* </div> */}

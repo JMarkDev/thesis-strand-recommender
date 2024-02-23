@@ -133,7 +133,7 @@ function Edit_admin() {
           <div className="flex flex-col items-start">
           <input
               type="text"
-              name="name"
+              name="Full Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className={`block w-full rounded-md border py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
@@ -141,6 +141,7 @@ function Edit_admin() {
               }`}
           />
           </div>
+          <p className="text-sm dark:text-white">(Last Name, First Name, Middle Initial, Suffix)</p>
           {nameError && <div className="text-red-600 text-sm">{nameError}</div>} 
         </div>
         <div className="mt-4">

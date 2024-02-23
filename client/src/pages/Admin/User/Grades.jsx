@@ -45,7 +45,7 @@ function Grades() {
   
 
   if (!data.length) {
-    return <p>Loading...</p>;
+    return <p>No grades input.</p>;
   }
 
   const filteredGradeEntries = Object.entries(data[0]).filter(([key]) => key !== 'studentId' && key !== 'course');

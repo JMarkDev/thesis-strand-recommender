@@ -112,7 +112,7 @@ function Add_admin() {
             <div className="flex flex-col items-start">
               <input
                 type="text" 
-                name="name"
+                name="Full Name"
                 value={values.name}
                 onChange={e =>
                   setValues({ ...values, name: e.target.value })
@@ -122,6 +122,7 @@ function Add_admin() {
                 }`}
               />
             </div>
+            <p className="text-sm dark:text-white">(Last Name, First Name, Middle Initial, Suffix)</p>
             {nameError && <div className="text-red-600 text-sm">{nameError}</div>}
           </div>
           <div className="mt-4">

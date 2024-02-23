@@ -179,19 +179,20 @@ function Profile() {
                             </div>
                             <label className='block text-sm font-medium text-gray-700 dark:text-white'>Full Name*</label>
                             <input type='text'
-                            name='name' 
+                            name='Full N' 
                             value={name}
                             className={`mt-1 p-2 block w-full border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm
                                 ${nameError ? 'border-red-600' : ''}
                             `}
                             onChange={(e) => setName(e.target.value)}
                             />
+                            <p className="text-sm dark:text-white">(Last Name, First Name, Middle Initial, Suffix)</p>
                              {nameError && <div className="text-red-600 text-sm">{nameError}</div>}
                             </div>
                            
                             <div className='mt-0 mx-3 mb-5'>
                             <label className='block text-sm font-medium text-gray-700 dark:text-white'>Email*</label>
-                            <p className='mt-1 p-2 block w-full focus:outline-none'>
+                            <p className='mt-1 p-2 block w-full focus:outline-none dark:text-white'>
                                 {username} 
                             </p> 
                             </div>
